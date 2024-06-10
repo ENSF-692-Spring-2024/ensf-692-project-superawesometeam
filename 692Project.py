@@ -1,3 +1,5 @@
+#Please run ImportCSV.py first before running this file
+
 from ImportCSV import process_str_csv_file
 from ImportCSV import process_float_csv_file
 
@@ -50,16 +52,16 @@ print("Finished data import.")
 # Merge 10 csv files
 print("Merging data...")
 df_list = [df_inflation, df_coal_consu, df_internet, df_mincpcap, df_GDP_total, df_life_exp, df_population, df_electricity_gen, df_resi_electricity_consu, df_cell_phone]
-df_final2 = df_list[0]
+df_final = df_list[0]
 
 print(len(df_list))
 
 for i in range(1, len(df_list)):
     print(".")
-    df_final2 = pd.merge(df_final2, df_list[i], left_index=True, right_on=['country', 'year'])
+    df_final = pd.merge(df_final, df_list[i], left_index=True, right_on=['country', 'year'])
 
-print("Final data size:", df_final2.shape)
+print("Final data size:", df_final.shape)
 #print(df_final2)
 print("Finished data merge.")
 print("Data preview:")
-print(df_final2.head(3))
+print(df_final.head(3))
