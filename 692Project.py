@@ -65,3 +65,5 @@ print("Final data size:", df_final.shape)
 print("Finished data merge.")
 print("Data preview:")
 print(df_final.head(3))
+
+df_final.to_csv("df_final.csv", index = True, header = True)
