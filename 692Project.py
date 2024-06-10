@@ -6,7 +6,7 @@ from ImportCSV import process_float_csv_file
 import pandas as pd
 
 # import all csv files
-print("Loding data begin....")
+print("Loading data begin....")
 print("1. Loading inflation data...")
 df_inflation = process_float_csv_file("inflation_annual_percent.csv", "inflation_percent")
 print(df_inflation.size, "values imported successfully...")
