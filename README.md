@@ -1,2 +1,32 @@
-[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-24ddc0f5d75046c5622901739e7c5dd533143b0c8e959d652212380cedb1ea36.svg)](https://classroom.github.com/a/A55IPDGc)
-[![Open in Visual Studio Code](https://classroom.github.com/assets/open-in-vscode-718a45dd9cf7e7f842a935f5ebbe5719a5e09af4491e668f4dbf3b35d5cca122.svg)](https://classroom.github.com/online_ide?assignment_repo_id=15238027&assignment_repo_type=AssignmentRepo)
+# ENSF 692 Spring 2024 - Group Project
+
+# Group members: Amrit Kaur, Bo Zheng Ma, Rick Zhang, Warisa Khaophong 
+
+
+## Goals:
+* Design and document a terminal-based Python application
+* Select, import, and manipulate a set of data
+* Merge multiple datasets using Pandas
+* Use hierarchical indexing to sort and slice data
+* Process data according to user input
+* Operate on data in Pandas and NumPy
+* Display data using Matplotlib
+* Collaboration with other programmers
+
+## Our selected datasets
+* Number of Cellphones 
+* Total Coal Consumption 
+* ELectricity generated 
+* Inflation annual percent 
+* Daily income ($ earned/person on a daily basis)
+* Life expentancy
+* Net internet users
+* Population
+* Residential electricity use
+* Total GDP USA (Inflation adjusted)
+
+## How to run the program
+* Clone the repository onto your local machine
+* Ensure that python along with pandas are installed properly.
+    * Change working directory to ensf-692-project-super-awesometeam
+    * Run 692Project.py by typing: python 692Project.py

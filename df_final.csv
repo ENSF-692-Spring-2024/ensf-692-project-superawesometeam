@@ -1,4 +1,4 @@
-country,year,inflation_percent,coal,internet,mincacap,GDP_USD_Total,life_exp_year,polulation,electricity_generation,residential_electricity_use,cell_phone_total
+country,year,inflation_percent,coal,internet,daily_income,GDP_USD_Total,life_exp_year,polulation,electricity_generation,residential_electricity_use,cell_phone_total
 UAE,1991,0.811,0,0,86.8,128000000000,68.7,2009999,17200000000,7290000000,43000
 UAE,1992,1.81,0,0,88.0,133000000000,68.8,2120000,18700000000,7850000000,48900
 UAE,1993,1.28,0,0,87.8,134000000000,68.8,2220000,21700000000,9130000000,70600
