@@ -76,6 +76,75 @@ def loaddata():
 
     return df_final
 
+def get_user_input(prompt, options):
+    """
+    Prompt the user for input and validate it against the provided options.
+
+    Args:
+        prompt (str): The prompt to display to the user.
+        options (list): A list of valid options.
+
+    Returns:
+        str: The user's input (validated).
+    """
+    # Prompt the user for input and convert it to lowercase
+    user_input = input(prompt).strip().lower()
+
+    # Continue prompting the user until a valid input is provided
+    while user_input not in options:
+        # Print an error message for invalid input
+        print("Invalid input, please try again.")
+        # Prompt the user again for input and convert it to lowercase
+        user_input = input(prompt).strip().lower()
+    
+     # Return the validated user input
+    return user_input
+
+def get_user_selection(df):
+    """
+    Function to get user selection for data filtering.
+
+    Args:
+        df (DataFrame): The DataFrame containing the dataset.
+
+    Returns:
+        tuple: A tuple containing the user's selected information and country.
+    """
+
+    # Define the options dictionary
+    info_options = {
+        '1': 'Inflation annual percent',
+        '2': 'Total Coal Consumption',
+        '3': 'Net Internet Users',
+        '4': 'Daily income ($ earned/person on a daily basis)',
+        '5': 'Total GDP USA (Inflation adjusted)',
+        '6': 'Life Expectancy',
+        '7': 'Population',
+        '8': 'ELectricity generated',
+        '9': 'Residential Electricity Consumption',
+        '10': 'Number of Cellphones'
+    }
+    # Display the available options to the user
+    print("\nThe program can provide the following information for a selected country:")
+    for option, info in info_options.items():
+        print(f"{option}. {info}")
+
+    # Prompt the user to select an option
+    info_prompt = "\nPlease select the information you want to retrieve or 0 to exit: "
+    info_selection = get_user_input(info_prompt, [str(i) for i in range(11)])
+
+    # Check if the user wants to exit
+    if info_selection == '0':
+        print("***Exiting the program***")
+        return None, None
+    
+    # Prompt the user to enter the country
+    country_prompt = "Please enter the country you want to search: "
+    # Create a list of valid country names from the DataFrame, converted to lowercase for comparison
+    valid_countries = [str(val).lower() for val in df.reset_index()['country'].unique()]
+    country = get_user_input(country_prompt, valid_countries)
+
+    return info_selection, country
 
 def main():
     try:
@@ -84,10 +153,32 @@ def main():
         print("Error:", e)
         print("Please check the error and try again.")
         return
-    
-    print("User input: ")
+    # Loop indefinitely until the user chooses to exit
+    while True:
+        # Get user's selection for data filtering
+        info, country = get_user_selection(df)
 
+        # Check if user wants to exit
+        if info is None or country is None:
+            break
 
+        # Print the selected country in uppercase
+        print("\n" + f"Country selected: {country.upper()}")
+
+        # Define information options for user's selection
+        info_options = {
+            '1': 'Inflation annual percent',
+            '2': 'Total Coal Consumption',
+            '3': 'Net Internet Users',
+            '4': 'Daily income ($ earned/person on a daily basis)',
+            '5': 'Total GDP USA (Inflation adjusted)',
+            '6': 'Life Expectancy',
+            '7': 'Population',
+            '8': 'ELectricity generated',
+            '9': 'Residential Electricity Consumption',
+            '10': 'Number of Cellphones'
+        }
+        print(f"Information selected: {info_options[info]}")
 
 if __name__ == '__main__':
     main()
