@@ -135,7 +135,28 @@ def main():
         print("Please check the error and try again.")
         return
     
-    print("User input: ")
+    while True:
+        info, country = get_user_selection(df)
+
+        if info is None or country is None:
+            break
+
+        # Placeholder for the function that will calculate and display the output
+        # This function will be implemented in the next step
+        print("\n" + f"Country selected: {country.upper()}")
+        info_options = {
+            '1': 'Inflation annual percent',
+            '2': 'Total Coal Consumption',
+            '3': 'Net Internet Users',
+            '4': 'Daily income ($ earned/person on a daily basis)',
+            '5': 'Total GDP USA (Inflation adjusted)',
+            '6': 'Life Expectancy',
+            '7': 'Population',
+            '8': 'ELectricity generated',
+            '9': 'Residential Electricity Consumption',
+            '10': 'Number of Cellphones'
+        }
+        print(f"Information selected: {info_options[info]}")
 
 
 
