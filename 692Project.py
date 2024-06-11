@@ -2,18 +2,21 @@
 # Super Awesome Team
 # Members: Amrit, Bo Zheng, Rick, Warisa
 #
-# Please run ImportCSV.py first before running this file
 # To run the file, make sure to use the command: python 692Project.py, and not run it directly using VSCode
-# Program to merge all csv files into one csv file, and perform analysis and plot graphs using the data
+# Program to merge all csv files into one csv file, and perform analysis and plot graphs using the data. 
+# Will output a csv file with the pivot table data for the selected category and country.
 
 from ImportCSV import process_str_csv_file
 from ImportCSV import process_float_csv_file
 
 import pandas as pd
 
-# Stage 1 & 2: import all csv files
-# @return: a dataframe that contains all data from 10 csv files
+# Stage 1 & 2
 def loaddata():
+    '''
+    Load all data from 10 csv files and merge them into one dataframe
+    :@return: a dataframe that contains all data from 10 csv files
+    '''
     print("Loading data begin....")
     print("1. Loading inflation data...")
     df_inflation = process_float_csv_file("src/inflation_annual_percent.csv", "inflation_percent")
@@ -40,7 +43,7 @@ def loaddata():
     print(df_life_exp.size, "values imported successfully...")
 
     print("7. Loading population data...")
-    df_population = process_str_csv_file("src/pop.csv", "polulation")
+    df_population = process_str_csv_file("src/pop.csv", "population")
     print(df_population.size, "values imported successfully...")
 
     print("8. Loading electricity generation data...")
@@ -72,9 +75,100 @@ def loaddata():
     print("Finished data merge.")
     print("Data preview:")
     print(df_final.head(3))
+
     df_final.to_csv("df_final.csv", index = True, header = True)
+    df_final.reset_index(inplace=True)
 
     return df_final
+
+def add_columns(df):
+    '''
+    Add columns to the dataframe for GDP per capita and Internet Penetration Rate
+    :@param df: dataframe to add columns to
+    :@return: dataframe with added columns
+    '''
+
+    print("\nAdding columns to the dataframe...")
+    # GDP per capita
+    df['GDP_per_capita'] = df['GDP_USD_Total'] / df['population']
+    # percentage of the total population that has access to the Internet
+    df['Internet_Penetration_Rate'] = (df['internet'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
+    print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate\n")
+    return df
+
+def analyze_data(df, category, country):
+    '''
+    Analyze the data for the selected category and country
+    :@param df: dataframe to analyze
+    :@param category: category to analyze
+    :@param country: country to analyze
+    '''
+
+    print(f"\nAnalyzing {category} data for {country.upper()}:")
+    df_country = df[df['country'].str.lower() == country.lower()]
+
+    # masking to focus on relevant data points for each analysis
+    df_country = df_country[df_country['GDP_USD_Total'] > (df_country['GDP_USD_Total'].max()*0.25)]  # masking operation
+
+    if category == 'Life Quality':
+        # Life Expectancy, Total GDP, Number of Cellphones, Internet Users
+        grouped_data = df_country.groupby('year').agg({
+            'life_exp_year': 'mean', 
+            'GDP_per_capita': 'mean',
+            'cell_phone_total': 'sum',
+            'Internet_Penetration_Rate': 'mean'
+        })
+
+        pivot = pd.pivot_table(df_country, values=['GDP_per_capita', 'life_exp_year', 'cell_phone_total', 'Internet_Penetration_Rate'], index='country', columns='year', aggfunc='mean')
+        
+
+    elif category == 'Economy':
+        # Total GDP, Population, Inflation
+        grouped_data = df_country.groupby('year').agg({
+            'GDP_USD_Total': 'sum', 
+            'population': 'max', 
+            'inflation_percent': 'mean'
+        })
+        pivot = pd.pivot_table(df_country, values=['GDP_USD_Total', 'population', 'inflation_percent'], index='country', columns='year', aggfunc='mean')
+
+    elif category == 'Energy':
+        # Electricity Generation, Coal Consumption, Internet Users
+        grouped_data = df_country.groupby('year').agg({
+            'electricity_generation': 'sum', 
+            'coal': 'mean', 
+            'Internet_Penetration_Rate': 'mean'
+        })
+        pivot = pd.pivot_table(df_country, values=['electricity_generation', 'coal', 'Internet_Penetration_Rate'], index='country', columns='year', aggfunc='mean')
+
+    elif category == 'Technology':
+        # Number of Cellphones, Internet Users, Total GDP, Daily Income
+        grouped_data = df_country.groupby('year').agg({
+            'cell_phone_total': 'sum', 
+            'Internet_Penetration_Rate': 'mean', 
+            'GDP_USD_Total': 'sum',
+            'daily_income': 'mean'
+        })
+        pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'Internet_Penetration_Rate', 'GDP_USD_Total', 'daily_income'], index='country', columns='year', aggfunc='mean')
+
+    elif category == 'Digital Infrastructure':
+        # Number of Cellphones, Internet Users, Electricity Generation
+        grouped_data = df_country.groupby('year').agg({
+            'cell_phone_total': 'sum', 
+            'Internet_Penetration_Rate': 'mean', 
+            'electricity_generation': 'sum'
+        })
+        pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'Internet_Penetration_Rate', 'electricity_generation'], index='country', columns='year', aggfunc='mean')
+
+
+    print("Category specific aggregation and analysis:")
+    print(grouped_data.describe())                          # Aggregation computation
+    print("Pivot table for visualizing trends:")
+    print(pivot)
+
+    filename = f"output/{category.replace(' ', '_').lower()}_{country.lower()}_pivot.csv"
+
+    pivot.to_csv(filename)
+    print(f"Pivot table saved as '{filename}'.")
 
 def get_user_input(prompt, options):
     """
@@ -94,7 +188,6 @@ def get_user_input(prompt, options):
     while user_input not in options:
         # Print an error message for invalid input
         print("Invalid input, please try again.")
-        # Prompt the user again for input and convert it to lowercase
         user_input = input(prompt).strip().lower()
     
      # Return the validated user input
@@ -111,74 +204,58 @@ def get_user_selection(df):
         tuple: A tuple containing the user's selected information and country.
     """
 
-    # Define the options dictionary
-    info_options = {
-        '1': 'Inflation annual percent',
-        '2': 'Total Coal Consumption',
-        '3': 'Net Internet Users',
-        '4': 'Daily income ($ earned/person on a daily basis)',
-        '5': 'Total GDP USA (Inflation adjusted)',
-        '6': 'Life Expectancy',
-        '7': 'Population',
-        '8': 'ELectricity generated',
-        '9': 'Residential Electricity Consumption',
-        '10': 'Number of Cellphones'
+    categories = {
+        '1': 'Life Quality', # Life Expectancy, Total GDP USA (Inflation adjusted), Number of Cellphones, Net Internet Users (Average per year)
+        '2': 'Economy', # Total GDP (Inflation adjusted), Population, Inflation annual percent
+        '3': 'Energy', # Electricity generated, Total Coal Consumption, Net Internet Users (Average per year)
+        '4': 'Technology', # Number of Cellphones, Net Internet Users (Average per year), Total GDP USA (Inflation adjusted), Daily income
+        '5': 'Digital Infrastructure', # Number of Cellphones, Net Internet Users, Electricity Generated
     }
-    # Display the available options to the user
-    print("\nThe program can provide the following information for a selected country:")
-    for option, info in info_options.items():
-        print(f"{option}. {info}")
+    print("\n\nSelect a category for analysis:")
+    for key, value in categories.items():
+        print(f"{key}. {value}")
 
-    # Prompt the user to select an option
     info_prompt = "\nPlease select the information you want to retrieve or 0 to exit: "
-    info_selection = get_user_input(info_prompt, [str(i) for i in range(11)])
-
-    # Check if the user wants to exit
-    if info_selection == '0':
+    category_code = get_user_input(info_prompt, [str(i) for i in range(11)])
+    if category_code == '0':
         print("***Exiting the program***")
         return None, None
-    
-    # Prompt the user to enter the country
-    country_prompt = "Please enter the country you want to search: "
-    # Create a list of valid country names from the DataFrame, converted to lowercase for comparison
-    valid_countries = [str(val).lower() for val in df.reset_index()['country'].unique()]
-    country = get_user_input(country_prompt, valid_countries)
 
-    return info_selection, country
+    category = categories[category_code]
+    country_prompt = "Please enter the country you want to analyze: "
+    valid_countries = [str(val).lower() for val in df['country'].unique()]
+    country = get_user_input(country_prompt, valid_countries)
+    return category, country
+
+def load_data_choice():
+    print("\n\n****Data analysis program!***")
+    while True:
+        choice = input("\nDo you want to: \n1. Re-import data  \n2. Use preloaded data \nPlease enter '1' or '2': ").strip().lower()
+        if choice == '1':
+            return loaddata()
+        elif choice == '2':
+            try:
+                return pd.read_csv('df_final.csv')
+            except FileNotFoundError:
+                print("File df_final.csv not found. Loading new data instead.")
+                return loaddata()
+        else:
+            print("Invalid choice. Please enter 'load' or 'existing'.")
 
 def main():
     try:
-        df = loaddata()
+        df = load_data_choice()
+        df = add_columns(df)
+        print("\nAggregate statistics for the entire dataset:")
+        print(df.describe())
+        while True:
+            category, country = get_user_selection(df)
+            if category is None or country is None:
+                break
+            analyze_data(df, category, country)
     except Exception as e:
-        print("Error:", e)
-        print("Please check the error and try again.")
+        print(f"An error occurred: {e}. \n\nExiting the program.")
         return
-    # Loop indefinitely until the user chooses to exit
-    while True:
-        # Get user's selection for data filtering
-        info, country = get_user_selection(df)
-
-        # Check if user wants to exit
-        if info is None or country is None:
-            break
-
-        # Print the selected country in uppercase
-        print("\n" + f"Country selected: {country.upper()}")
-
-        # Define information options for user's selection
-        info_options = {
-            '1': 'Inflation annual percent',
-            '2': 'Total Coal Consumption',
-            '3': 'Net Internet Users',
-            '4': 'Daily income ($ earned/person on a daily basis)',
-            '5': 'Total GDP USA (Inflation adjusted)',
-            '6': 'Life Expectancy',
-            '7': 'Population',
-            '8': 'ELectricity generated',
-            '9': 'Residential Electricity Consumption',
-            '10': 'Number of Cellphones'
-        }
-        print(f"Information selected: {info_options[info]}")
 
 if __name__ == '__main__':
     main()

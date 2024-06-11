@@ -1,6 +1,6 @@
 # ENSF 692 Spring 2024 - Group Project
 
-# Group members: Amrit Kaur, Bo Zheng Ma, Rick Zhang, Warisa Khaophong 
+# Group members: Bo Zheng Ma, Rick Zhang, Warisa Khaophong 
 
 
 ## Goals:
