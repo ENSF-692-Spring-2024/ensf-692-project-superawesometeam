@@ -76,6 +76,19 @@ def loaddata():
 
     return df_final
 
+def get_user_input(prompt, options):
+    # Prompt the user for input and convert it to lowercase
+    user_input = input(prompt).strip().lower()
+
+    # Continue prompting the user until a valid input is provided
+    while user_input not in options:
+        # Print an error message for invalid input
+        print("Invalid input, please try again.")
+        # Prompt the user again for input and convert it to lowercase
+        user_input = input(prompt).strip().lower()
+    
+     # Return the validated user input
+    return user_input
 
 def main():
     try:
