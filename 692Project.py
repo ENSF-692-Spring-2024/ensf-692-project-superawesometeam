@@ -77,6 +77,16 @@ def loaddata():
     return df_final
 
 def get_user_input(prompt, options):
+    """
+    Prompt the user for input and validate it against the provided options.
+
+    Args:
+        prompt (str): The prompt to display to the user.
+        options (list): A list of valid options.
+
+    Returns:
+        str: The user's input (validated).
+    """
     # Prompt the user for input and convert it to lowercase
     user_input = input(prompt).strip().lower()
 
@@ -91,6 +101,15 @@ def get_user_input(prompt, options):
     return user_input
 
 def get_user_selection(df):
+    """
+    Function to get user selection for data filtering.
+
+    Args:
+        df (DataFrame): The DataFrame containing the dataset.
+
+    Returns:
+        tuple: A tuple containing the user's selected information and country.
+    """
 
     # Define the options dictionary
     info_options = {
@@ -134,16 +153,19 @@ def main():
         print("Error:", e)
         print("Please check the error and try again.")
         return
-    
+    # Loop indefinitely until the user chooses to exit
     while True:
+        # Get user's selection for data filtering
         info, country = get_user_selection(df)
 
+        # Check if user wants to exit
         if info is None or country is None:
             break
 
-        # Placeholder for the function that will calculate and display the output
-        # This function will be implemented in the next step
+        # Print the selected country in uppercase
         print("\n" + f"Country selected: {country.upper()}")
+
+        # Define information options for user's selection
         info_options = {
             '1': 'Inflation annual percent',
             '2': 'Total Coal Consumption',
@@ -157,8 +179,6 @@ def main():
             '10': 'Number of Cellphones'
         }
         print(f"Information selected: {info_options[info]}")
-
-
 
 if __name__ == '__main__':
     main()
