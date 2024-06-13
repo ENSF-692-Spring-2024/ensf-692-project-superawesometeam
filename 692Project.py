@@ -94,6 +94,8 @@ def add_columns(df):
     # percentage of the total population that has access to the Internet
     df['Internet_Penetration_Rate'] = (df['internet'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
     print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate\n")
+    print("\nFinal dataframe saved as: output/df_export\n")
+    df.to_csv("output/df_export.csv", index = True, header = True)
     return df
 
 def analyze_data(df, category, country):
@@ -169,6 +171,7 @@ def analyze_data(df, category, country):
 
     pivot.to_csv(filename)
     print(f"Pivot table saved as '{filename}'.")
+    
 
 def get_user_input(prompt, options):
     """
