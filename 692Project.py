@@ -163,7 +163,7 @@ def analyze_data(df, category, country):
 
 
     print("Category specific aggregation and analysis:")
-    print(grouped_data.describe())                          # Aggregation computation
+    print(grouped_data.describe())                          
     print("Pivot table for visualizing trends:")
     print(pivot)
 

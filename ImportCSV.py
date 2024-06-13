@@ -9,8 +9,9 @@ import numpy as np
 
 
 def process_str_csv_file (file_name, data_name):
-    """age: Set a new age value for a Horse object as long as it is greater than zero. A message is printed if update is successful.
-        
+    """
+    This function reads a CSV file that contains string data and processes the data to be used in the final dataframe.
+
     Args:
             file_name (str): Name of the CSV file
             data_name (str): Category name of the data
@@ -25,6 +26,7 @@ def process_str_csv_file (file_name, data_name):
     
     fresh_data_body = pd.DataFrame(fresh_data.iloc[1:,1:])
    
+    # Combine header year and index country as multiindex
     stack_integer_col_and_data_body = np.vstack((horizontal_integer_col_name, fresh_data_body))
 
     headerless_country_by_year_data = pd.DataFrame(stack_integer_col_and_data_body, index=fresh_data.index)
@@ -34,20 +36,22 @@ def process_str_csv_file (file_name, data_name):
     body = headerless_country_by_year_data[1:] #take the data less the header row
     body.columns = new_header.rename('year') #set the header row as the df header
     country_by_year_data = pd.DataFrame(body, index=body.index.rename('country'))
+    
 
-
+    # Prepping the data in stages
     country_year_data = pd.DataFrame(country_by_year_data.stack())
     stage1 = country_year_data.rename(columns={country_year_data.columns.values[0]:data_name})
     stage2 = pd.DataFrame(stage1, index=stage1.index.set_names(['country', 'year']))
 
-
+    # Perform sanitization in stage 3
     stage3 = stage2[data_name].replace({"k":"*1e3", "M":"*1e6", "B":"*1e9", "µ":"*1e-6", "TR":"*1e12"}, regex=True).map(pd.eval).astype(int)
     stage4 = pd.DataFrame(stage3)
     stage5 = stage4.reset_index()
     return stage4
 
 def process_float_csv_file (file_name, data_name):
-    """age: Set a new age value for a Horse object as long as it is greater than zero. A message is printed if update is successful.
+    """ 
+    This function reads a CSV file that contains float data and processes the data to be used in the final dataframe.
         
     Args:
             file_name (str): Name of the CSV file
@@ -74,11 +78,12 @@ def process_float_csv_file (file_name, data_name):
     country_by_year_data = pd.DataFrame(body, index=body.index.rename('country'))
 
 
+    # Prepping the data in stages
     country_year_data = pd.DataFrame(country_by_year_data.stack())
     stage1 = country_year_data.rename(columns={country_year_data.columns.values[0]:data_name})
     stage2 = pd.DataFrame(stage1, index=stage1.index.set_names(['country', 'year']))
 
-
+    # Perform sanitization in stage 3
     stage3 = stage2[data_name].replace({"\U00002212":"-","k":"*1e3", "µ":"*1e-6", "M":"*1e6", "B":"*1e9"}, regex=True).map(pd.eval).astype(float)
     stage4 = pd.DataFrame(stage3)
     stage5 = stage4.reset_index()

@@ -30,3 +30,10 @@
 * Ensure that python along with pandas are installed properly.
     * Change working directory to ensf-692-project-super-awesometeam
     * Run 692Project.py by typing: python 692Project.py
+
+## Inputs
+* The program will process datasets from 'src' folder and merge them into 'df_final.csv'
+
+## Outputs
+* The program will take in 'df_final.csv' and output pivot tables and final dataframe (with added columns) to 'output' folder.
+* The plot png files will also be in 'output' folder
