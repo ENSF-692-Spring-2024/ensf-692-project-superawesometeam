@@ -2,6 +2,8 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from ImportCSV import process_float_csv_file
 
+#Author: Warisa
+
 def analyze_data(df, category, country):
     '''
     Analyze the data for the selected category and country
