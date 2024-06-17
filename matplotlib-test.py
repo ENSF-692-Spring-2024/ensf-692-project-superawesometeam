@@ -98,6 +98,74 @@ def add_columns(df):
     print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate\n")
     return df
 
+# -----------   Rick's Functions for pivot table ploting   -----------------#
+
+
+
+def compare_by_GDP(data_frame, country):
+    df_gdp_per_capita = pd.DataFrame(data_frame['GDP_per_capita'].groupby(df['country']).mean())
+    max_value = df_gdp_per_capita.max().values[0]
+    min_value = df_gdp_per_capita.min().values[0]
+    df_mean = df_gdp_per_capita.reset_index()
+    country_max = df_mean['country'][df_mean['GDP_per_capita'] == max_value].values[0]
+    country_min = df_mean['country'][df_mean['GDP_per_capita'] == min_value].values[0]
+    #print("Max GDP", country_max, max_value)
+    #print("Min GDP", country_min, min_value)
+    #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
+    compare_by_GDP_table = pd.DataFrame(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
+    
+    return compare_by_GDP_table.reset_index()
+
+def compare_by_internet(data_frame, country):
+    df_internet = pd.DataFrame(data_frame['Internet_Penetration_Rate'].groupby(df['country']).mean())
+    max_value = df_internet.max().values[0]
+    min_value = df_internet.min().values[0]
+    df_mean = df_internet.reset_index()
+    country_max = df_mean['country'][df_mean['Internet_Penetration_Rate'] == max_value].values[0]
+    country_min = df_mean['country'][df_mean['Internet_Penetration_Rate'] == min_value].values[0]
+    #print("Max Internet", country_max, max_value)
+    #print("Min Internet", country_min, min_value)
+    #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
+    compare_by_internet_table = pd.DataFrame(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
+    
+    return compare_by_internet_table.reset_index()
+
+def compare_by_life_exp(data_frame, country):
+    df_life_exp = pd.DataFrame(data_frame['life_exp_year'].groupby(df['country']).mean())
+    max_value = df_life_exp.max().values[0]
+    min_value = df_life_exp.min().values[0]
+    df_mean = df_life_exp.reset_index()
+    country_max = df_mean['country'][df_mean['life_exp_year'] == max_value].values[0]
+    country_min = df_mean['country'][df_mean['life_exp_year'] == min_value].values[0]
+    #print("Max Internet", country_max, max_value)
+    #print("Min Internet", country_min, min_value)
+    #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
+    compare_by_life_exp_table = pd.DataFrame(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
+    
+    return compare_by_life_exp_table.reset_index()
+
+
+def compare_by_energy(data_frame, country):
+    df_gdp_per_capita = pd.DataFrame(data_frame['life_exp_year'].groupby(df['country']).mean())
+    max_value = df_gdp_per_capita.max().values[0]
+    min_value = df_gdp_per_capita.min().values[0]
+    df_mean = df_gdp_per_capita.reset_index()
+    country_max = df_mean['country'][df_mean['life_exp_year'] == max_value].values[0]
+    country_min = df_mean['country'][df_mean['life_exp_year'] == min_value].values[0]
+    #print("Max Internet", country_max, max_value)
+    #print("Min Internet", country_min, min_value)
+    #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
+    compare_by_life_exp_table = pd.DataFrame(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
+    
+    return compare_by_life_exp_table.reset_index()
+
+
+
+
+#-----------------------------------------#
+
+
+
 df = pd.read_csv('df_final.csv')
 df = add_columns(df)
 

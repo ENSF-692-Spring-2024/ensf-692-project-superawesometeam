@@ -96,7 +96,9 @@ def add_columns(df):
         df['GDP_per_capita'] = df['GDP_USD_Total'] / df['population']
         # percentage of the total population that has access to the Internet
         df['Internet_Penetration_Rate'] = (df['internet'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
-        print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate\n")
+        df['Enery_per_capita'] = (df['residential_electricity_use'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
+        df['Cell_phone_per_capita'] = (df['cell_phone_total'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
+        print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate, Energy_per_capita, Cell_phone_per_capita\n")
     except Exception as e:
         print(f"Failed to add columns, an error occurred: {e}.")
     
