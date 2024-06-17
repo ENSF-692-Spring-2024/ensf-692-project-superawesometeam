@@ -118,7 +118,7 @@ def analyze_data(df, category, country):
     df_country = df_country[df_country['GDP_USD_Total'] > (df_country['GDP_USD_Total'].max()*0.25)]  # masking operation
 
     if category == 'Life Quality':
-        # Life Expectancy, Total GDP, Number of Cellphones, Internet Users
+        # Life Expectancy, GDP per capita, Number of Cellphones, Internet Users
         grouped_data = df_country.groupby('year').agg({
             'life_exp_year': 'mean', 
             'GDP_per_capita': 'mean',
@@ -145,10 +145,10 @@ def analyze_data(df, category, country):
             'coal': 'mean', 
             'internet': 'mean'
         })
-        pivot = pd.pivot_table(df_country, values=['electricity_generation', 'coal', 'Internet_Penetration_Rate'], index='country', columns='year', aggfunc='mean')
+        pivot = pd.pivot_table(df_country, values=['electricity_generation', 'coal', 'internet'], index='country', columns='year', aggfunc='mean')
 
     elif category == 'Technology':
-        # Number of Cellphones, Internet Users, Total GDP, Daily Income
+        # Number of Cellphones, Internet penetration rate, Total GDP, Daily Income
         grouped_data = df_country.groupby('year').agg({
             'cell_phone_total': 'sum', 
             'Internet_Penetration_Rate': 'mean', 
@@ -164,7 +164,7 @@ def analyze_data(df, category, country):
             'internet': 'mean', 
             'electricity_generation': 'sum'
         })
-        pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'Internet_Penetration_Rate', 'electricity_generation'], index='country', columns='year', aggfunc='mean')
+        pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'internet', 'electricity_generation'], index='country', columns='year', aggfunc='mean')
     
 
     print("Category specific aggregation and analysis:")
