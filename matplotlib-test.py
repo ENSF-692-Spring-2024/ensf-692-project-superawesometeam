@@ -1,6 +1,7 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 from ImportCSV import process_float_csv_file
+import numpy as np
 
 #Author: Warisa
 
@@ -86,16 +87,23 @@ def analyze_data(df, category, country):
 def add_columns(df):
     '''
     Add columns to the dataframe for GDP per capita and Internet Penetration Rate
-    :param df: dataframe to add columns to
-    :return: dataframe with added columns
+    :@param df: dataframe to add columns to
+    :@return: dataframe with added columns
     '''
 
     print("\nAdding columns to the dataframe...")
-    # GDP per capita
-    df['GDP_per_capita'] = df['GDP_USD_Total'] / df['population']
-    # percentage of the total population that has access to the Internet
-    df['Internet_Penetration_Rate'] = (df['internet'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
-    print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate\n")
+    try:
+        # GDP per capita
+        df['GDP_per_capita'] = df['GDP_USD_Total'] / df['population']
+        # percentage of the total population that has access to the Internet
+        df['Internet_Penetration_Rate'] = (df['internet'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
+        df['Energy_per_capita'] = (df['residential_electricity_use'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
+        df['Cell_phone_per_capita'] = (df['cell_phone_total'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
+        print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate, Energy_per_capita, Cell_phone_per_capita\n")
+    except Exception as e:
+        print(f"Failed to add columns, an error occurred: {e}.")
+    
+    
     return df
 
 # -----------   Rick's Functions for pivot table ploting   -----------------#
@@ -112,7 +120,7 @@ def compare_by_GDP(data_frame, country):
     #print("Max GDP", country_max, max_value)
     #print("Min GDP", country_min, min_value)
     #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
-    compare_by_GDP_table = pd.DataFrame(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
+    compare_by_GDP_table = pd.DataFrame(data_frame[['country', 'year','GDP_per_capita']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
     
     return compare_by_GDP_table.reset_index()
 
@@ -126,7 +134,7 @@ def compare_by_internet(data_frame, country):
     #print("Max Internet", country_max, max_value)
     #print("Min Internet", country_min, min_value)
     #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
-    compare_by_internet_table = pd.DataFrame(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
+    compare_by_internet_table = pd.DataFrame(data_frame[['country', 'year', 'Internet_Penetration_Rate']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
     
     return compare_by_internet_table.reset_index()
 
@@ -140,24 +148,38 @@ def compare_by_life_exp(data_frame, country):
     #print("Max Internet", country_max, max_value)
     #print("Min Internet", country_min, min_value)
     #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
-    compare_by_life_exp_table = pd.DataFrame(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
+    compare_by_life_exp_table = pd.DataFrame(data_frame[['country', 'year', 'life_exp_year']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
     
     return compare_by_life_exp_table.reset_index()
 
 
 def compare_by_energy(data_frame, country):
-    df_gdp_per_capita = pd.DataFrame(data_frame['life_exp_year'].groupby(df['country']).mean())
-    max_value = df_gdp_per_capita.max().values[0]
-    min_value = df_gdp_per_capita.min().values[0]
-    df_mean = df_gdp_per_capita.reset_index()
-    country_max = df_mean['country'][df_mean['life_exp_year'] == max_value].values[0]
-    country_min = df_mean['country'][df_mean['life_exp_year'] == min_value].values[0]
+    df_energy = pd.DataFrame(data_frame['Energy_per_capita'].groupby(df['country']).mean())
+    max_value = df_energy.max().values[0]
+    min_value = df_energy.min().values[0]
+    df_mean = df_energy.reset_index()
+    country_max = df_mean['country'][df_mean['Energy_per_capita'] == max_value].values[0]
+    country_min = df_mean['country'][df_mean['Energy_per_capita'] == min_value].values[0]
     #print("Max Internet", country_max, max_value)
     #print("Min Internet", country_min, min_value)
     #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
-    compare_by_life_exp_table = pd.DataFrame(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
+    compare_by_energy_table = pd.DataFrame(data_frame[['country', 'year','Energy_per_capita']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
     
-    return compare_by_life_exp_table.reset_index()
+    return compare_by_energy_table.reset_index()
+
+def compare_by_cell_phone(data_frame, country):
+    df_cell_phone = pd.DataFrame(data_frame['Cell_phone_per_capita'].groupby(df['country']).mean())
+    max_value = df_cell_phone.max().values[0]
+    min_value = df_cell_phone.min().values[0]
+    df_mean = df_cell_phone.reset_index()
+    country_max = df_mean['country'][df_mean['Cell_phone_per_capita'] == max_value].values[0]
+    country_min = df_mean['country'][df_mean['Cell_phone_per_capita'] == min_value].values[0]
+    #print("Max Internet", country_max, max_value)
+    #print("Min Internet", country_min, min_value)
+    #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
+    compare_by_cell_phone_table = pd.DataFrame(data_frame[['country', 'year','Cell_phone_per_capita']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
+    
+    return compare_by_cell_phone_table.reset_index()
 
 
 
@@ -170,7 +192,7 @@ df = pd.read_csv('df_final.csv')
 df = add_columns(df)
 
 category = 'Life Quality'
-country = 'china'
+country = 'China'
 plot_df = analyze_data(df, category, country)
 
 def plot_life_quality(grouped_data, country):
@@ -380,7 +402,7 @@ def plot_digital_infrastructure(grouped_data, country):
     electricity_generation = grouped_data['electricity_generation'] / 1e6  # Convert to Million MWh
     
     # Creating figure and subplots
-    fig, axs = plt.subplots(2, 1, figsize=(12, 10))
+    fig, axs = plt.subplots(3, 1, figsize=(12, 8), constrained_layout=True)
     fig.suptitle(f'Digital Infrastructure Trends in {country.capitalize()} from {start_year} to {end_year}', fontsize=16)
 
     # Subplot 1: Number of Cellphones and Internet Users
@@ -406,9 +428,27 @@ def plot_digital_infrastructure(grouped_data, country):
     ax3.legend(loc='upper left')
     ax3.set_title('Electricity Generation')
 
+    # Rick added a pivot table plot -------#
+    digital_infrastructure_df_for_pivot = compare_by_cell_phone(df, country)
+    print(digital_infrastructure_df_for_pivot)
+    digital_infrastructure_pivot_table = digital_infrastructure_df_for_pivot.pivot_table('Cell_phone_per_capita', index='year', columns='country')
+    print(digital_infrastructure_pivot_table)
+    w = axs[2]
+    #xticks=df.index
+    #w.xticks()
+    w.set_xlabel('Year')
+    #new_yticks = np.arange(years.min(), years.max(), 1, dtype=int)
+    #w.xticks(new_yticks)
+    w.plot(digital_infrastructure_pivot_table, marker='o', linestyle='-')
+    w.set_xticks(np.arange(digital_infrastructure_df_for_pivot['year'].min(), digital_infrastructure_df_for_pivot['year'].max() + 1, 1))
+  
+   
+    # -------------------------------------#
+
+
     # Save the plot as a PNG file
     filename = f'output/digital_infrastructure_{country.lower()}_grouped.png'
     plt.savefig(filename)
     plt.show()
 
-#plot_digital_infrastructure(plot_df, country)
+plot_digital_infrastructure(plot_df, country)
