@@ -1,10 +1,12 @@
 # ENSF692 Group Project
 # Super Awesome Team
-# Members: Amrit, Bo Zheng, Rick, Warisa
+# Members: Bo Zheng, Rick, Warisa
 #
-# To run the file, make sure to use the command: python 692Project.py, and not run it directly using VSCode
+# To run the file, make sure to use the command: python 692Project.py while in the directory, and not run it directly using VSCode
 # Program to merge all csv files into one csv file, and perform analysis and plot graphs using the data. 
 # Will output a csv file with the pivot table data for the selected category and country.
+# Will output a png file containing the plot of the data.
+# Will output a csv file containing the final dataframe.
 
 from ImportCSV import process_str_csv_file
 from ImportCSV import process_float_csv_file
@@ -17,7 +19,7 @@ def loaddata():
     Load all data from 10 csv files and merge them into one dataframe
     :@return: a dataframe that contains all data from 10 csv files
     '''
-    print("Loading data begin....")
+    print("\nLoading data begin....")
     print("1. Loading inflation data...")
     df_inflation = process_float_csv_file("src/inflation_annual_percent.csv", "inflation_percent")
     print(df_inflation.size, "values imported successfully...")
@@ -89,13 +91,16 @@ def add_columns(df):
     '''
 
     print("\nAdding columns to the dataframe...")
-    # GDP per capita
-    df['GDP_per_capita'] = df['GDP_USD_Total'] / df['population']
-    # percentage of the total population that has access to the Internet
-    df['Internet_Penetration_Rate'] = (df['internet'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
-    print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate\n")
-    print("\nFinal dataframe saved as: output/df_export\n")
-    df.to_csv("output/df_export.csv", index = True, header = True)
+    try:
+        # GDP per capita
+        df['GDP_per_capita'] = df['GDP_USD_Total'] / df['population']
+        # percentage of the total population that has access to the Internet
+        df['Internet_Penetration_Rate'] = (df['internet'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
+        print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate\n")
+    except Exception as e:
+        print(f"Failed to add columns, an error occurred: {e}.")
+    
+    
     return df
 
 def analyze_data(df, category, country):
@@ -138,7 +143,7 @@ def analyze_data(df, category, country):
         grouped_data = df_country.groupby('year').agg({
             'electricity_generation': 'sum', 
             'coal': 'mean', 
-            'Internet_Penetration_Rate': 'mean'
+            'internet': 'mean'
         })
         pivot = pd.pivot_table(df_country, values=['electricity_generation', 'coal', 'Internet_Penetration_Rate'], index='country', columns='year', aggfunc='mean')
 
@@ -156,11 +161,11 @@ def analyze_data(df, category, country):
         # Number of Cellphones, Internet Users, Electricity Generation
         grouped_data = df_country.groupby('year').agg({
             'cell_phone_total': 'sum', 
-            'Internet_Penetration_Rate': 'mean', 
+            'internet': 'mean', 
             'electricity_generation': 'sum'
         })
         pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'Internet_Penetration_Rate', 'electricity_generation'], index='country', columns='year', aggfunc='mean')
-
+    
 
     print("Category specific aggregation and analysis:")
     print(grouped_data.describe())                          
@@ -171,6 +176,9 @@ def analyze_data(df, category, country):
 
     pivot.to_csv(filename)
     print(f"Pivot table saved as '{filename}'.")
+
+    print("\nFinal dataframe saved as: output/df_export\n")
+    df.to_csv("output/df_export.csv", index = True, header = True)
     
 
 def get_user_input(prompt, options):
@@ -185,20 +193,26 @@ def get_user_input(prompt, options):
         str: The user's input (validated).
     """
     # Prompt the user for input and convert it to lowercase
-    user_input = input(prompt).strip().lower()
 
     # Continue prompting the user until a valid input is provided
-    while user_input not in options:
+    while True:
+        try:
+            user_input = input(prompt).strip().lower()
+            if user_input not in options:
+                raise ValueError("Invalid input, please try again.")
+
         # Print an error message for invalid input
-        print("Invalid input, please try again.")
-        user_input = input(prompt).strip().lower()
+        except ValueError as e:
+            print(e)
+            continue
+        break
     
      # Return the validated user input
     return user_input
 
 def get_user_selection(df):
     """
-    Function to get user selection for data filtering.
+    Function to get user selection so that the data can be analyzed.
 
     Args:
         df (DataFrame): The DataFrame containing the dataset.
@@ -213,37 +227,52 @@ def get_user_selection(df):
         '3': 'Energy', # Electricity generated, Total Coal Consumption, Net Internet Users (Average per year)
         '4': 'Technology', # Number of Cellphones, Net Internet Users (Average per year), Total GDP USA (Inflation adjusted), Daily income
         '5': 'Digital Infrastructure', # Number of Cellphones, Net Internet Users, Electricity Generated
+        '0': 'Exit' # Exit the program
     }
-    print("\n\nSelect a category for analysis:")
+
+
+    print("\n\nTopics for analysis:")
     for key, value in categories.items():
         print(f"{key}. {value}")
 
-    info_prompt = "\nPlease select the information you want to retrieve or 0 to exit: "
-    category_code = get_user_input(info_prompt, [str(i) for i in range(11)])
+    info_prompt = "\nPlease select the information you want to retrieve by entering their corresponding number: "
+    category_code = get_user_input(info_prompt, [str(i) for i in range(6)])
     if category_code == '0':
         print("***Exiting the program***")
         return None, None
+    
+    # Print the list of countries available for analysis
+    valid_countries = [str(val).lower() for val in df['country'].unique()]
+    print("\n\nAvailable countries:")
+    for country in sorted(valid_countries):
+        print(country.capitalize(), end="  ")
 
     category = categories[category_code]
-    country_prompt = "Please enter the country you want to analyze: "
+    country_prompt = "\n\n\nPlease enter the country you want to analyze: "
     valid_countries = [str(val).lower() for val in df['country'].unique()]
     country = get_user_input(country_prompt, valid_countries)
     return category, country
 
 def load_data_choice():
-    print("\n\n****Data analysis program!***")
+    """
+    Function to prompt the user to choose between re-importing the data or using the preloaded data.
+    """
+    print("\n\n******* Data analysis program *******")
     while True:
-        choice = input("\nDo you want to: \n1. Re-import data  \n2. Use preloaded data \nPlease enter '1' or '2': ").strip().lower()
-        if choice == '1':
-            return loaddata()
-        elif choice == '2':
-            try:
-                return pd.read_csv('df_final.csv')
-            except FileNotFoundError:
-                print("File df_final.csv not found. Loading new data instead.")
+        try:
+            choice = input("\nDo you want to: \n1. Re-import data. (Do this if you want to see the csv files merging)  \n2. Use preloaded data. (Do this to save time and utilize merged dataset)  \n\nPlease enter '1' or '2': ").strip().lower()
+            if choice == '1':
                 return loaddata()
-        else:
-            print("Invalid choice. Please enter 'load' or 'existing'.")
+            elif choice == '2':
+                try:
+                    return pd.read_csv('df_final.csv')
+                except FileNotFoundError:
+                    print("File df_final.csv not found. Loading new data instead.")
+                    return loaddata()
+            else:
+                raise ValueError("Invalid choice. Please enter '1' or '2'.")
+        except ValueError as e:
+            print(f"An error occurred: {e} Please try again.")
 
 def main():
     try:
