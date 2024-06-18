@@ -10,6 +10,8 @@
 
 from ImportCSV import process_str_csv_file
 from ImportCSV import process_float_csv_file
+from matplotlib_for_692_project import compare_by_cell_phone, compare_by_GDP, compare_by_energy, compare_by_internet, compare_by_life_exp
+from matplotlib_for_692_project import plot_digital_infrastructure, plot_economy, plot_energy, plot_life_quality, plot_technology
 
 
 import pandas as pd
@@ -201,7 +203,9 @@ def get_user_input(prompt, options):
     # Continue prompting the user until a valid input is provided
     while True:
         try:
-            user_input = input(prompt).strip().lower()
+            user_input_raw = input(prompt)
+            user_input = user_input_raw.strip().lower()
+            #user_input = input(prompt).strip().lower()
             if user_input not in options:
                 raise ValueError("Invalid input, please try again.")
 
@@ -212,7 +216,8 @@ def get_user_input(prompt, options):
         break
     
      # Return the validated user input
-    return user_input
+    return user_input, user_input_raw
+    #return user_input, user_input_raw
 
 def get_user_selection(df):
     """
@@ -240,7 +245,7 @@ def get_user_selection(df):
         print(f"{key}. {value}")
 
     info_prompt = "\nPlease select the information you want to retrieve by entering their corresponding number: "
-    category_code = get_user_input(info_prompt, [str(i) for i in range(6)])
+    category_code, category_code_raw = get_user_input(info_prompt, [str(i) for i in range(6)])
     if category_code == '0':
         print("***Exiting the program***")
         return None, None
@@ -254,8 +259,12 @@ def get_user_selection(df):
     category = categories[category_code]
     country_prompt = "\n\n\nPlease enter the country you want to analyze: "
     valid_countries = [str(val).lower() for val in df['country'].unique()]
-    country = get_user_input(country_prompt, valid_countries)
-    return category, country
+    #country, country_raw = get_user_input(country_prompt, valid_countries)
+    country, country_raw= get_user_input(country_prompt, valid_countries)
+
+    #return category, country, country_raw
+    return category, country, country_raw
+
 
 def load_data_choice():
     """
@@ -278,17 +287,34 @@ def load_data_choice():
         except ValueError as e:
             print(f"An error occurred: {e} Please try again.")
 
+def plot_after_analysis(grouped_data, data_frame, category, country):
+
+    if category == 'Life Quality':
+        plot_life_quality(grouped_data, country, data_frame)
+    elif category == 'Economy':
+        plot_economy(grouped_data, country, data_frame)
+    elif category == 'Energy':
+        plot_energy(grouped_data, country, data_frame)
+    elif category == 'Technology':
+        plot_technology(grouped_data, country, data_frame)
+    elif category == 'Digital Infrastructure':
+        plot_digital_infrastructure(grouped_data, country, data_frame)
+
 def main():
     try:
         df = load_data_choice()
-        df = add_columns(df)
+        df = add_columns(df) # Can be used for plot
         print("\nAggregate statistics for the entire dataset:")
         print(df.describe())
         while True:
-            category, country = get_user_selection(df)
+            category, country, country_raw = get_user_selection(df)
+            #category, country= get_user_selection(df)
+
             if category is None or country is None:
                 break
             df_for_plot = analyze_data(df, category, country)
+
+            plot_after_analysis(df_for_plot, df, category, country_raw)
     except Exception as e:
         print(f"An error occurred: {e}. \n\nExiting the program.")
         return

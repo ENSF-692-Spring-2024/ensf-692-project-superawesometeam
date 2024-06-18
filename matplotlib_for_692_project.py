@@ -195,7 +195,7 @@ category = 'Life Quality'
 country = 'UAE'
 plot_df = analyze_data(df, category, country)
 
-def plot_life_quality(grouped_data, country):
+def plot_life_quality(grouped_data, country, data_frame):
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -241,7 +241,7 @@ def plot_life_quality(grouped_data, country):
 
     # Rick added a pivot table plot -------#
 
-    life_exp_df_for_pivot = compare_by_life_exp(df, country)
+    life_exp_df_for_pivot = compare_by_life_exp(data_frame, country)
     #print(digital_infrastructure_df_for_pivot)
     life_exp_pivot_table = life_exp_df_for_pivot.pivot_table('life_exp_year', index='year', columns='country')
     plot_3 = axs[2]
@@ -262,12 +262,12 @@ def plot_life_quality(grouped_data, country):
     plt.savefig(filename)
     plt.show()
 
-plot_life_quality(plot_df, country)
+#plot_life_quality(plot_df, country, df)
 
 category = 'Economy'
 plot_df = analyze_data(df, category, country)
 
-def plot_economy(grouped_data, country):
+def plot_economy(grouped_data, country, data_frame):
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -304,7 +304,7 @@ def plot_economy(grouped_data, country):
 
     # Rick added a pivot table plot -------#
 
-    economy_df_for_pivot = compare_by_GDP(df, country)
+    economy_df_for_pivot = compare_by_GDP(data_frame, country)
     #print(digital_infrastructure_df_for_pivot)
     economy_pivot_table = economy_df_for_pivot.pivot_table('GDP_per_capita', index='year', columns='country')
     plot_3 = axs[2]
@@ -324,12 +324,12 @@ def plot_economy(grouped_data, country):
     plt.savefig(filename)
     plt.show()
 
-#plot_economy(plot_df, country)
+#plot_economy(plot_df, country,df)
 
 category = 'Energy'
 plot_df = analyze_data(df, category, country)
 
-def plot_energy(grouped_data, country):
+def plot_energy(grouped_data, country, data_frame):
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -368,7 +368,7 @@ def plot_energy(grouped_data, country):
 
     # Rick added a pivot table plot -------#
 
-    energy_df_for_pivot = compare_by_energy(df, country)
+    energy_df_for_pivot = compare_by_energy(data_frame, country)
     #print(digital_infrastructure_df_for_pivot)
     energy_pivot_table = energy_df_for_pivot.pivot_table('Energy_per_capita', index='year', columns='country')
     plot_3 = axs[2]
@@ -390,12 +390,12 @@ def plot_energy(grouped_data, country):
     plt.savefig(filename)
     plt.show()
 
-#plot_energy(plot_df, country)
+#plot_energy(plot_df, country, df)
 
 category = 'Technology'
 plot_df = analyze_data(df, category, country)
 
-def plot_technology(grouped_data, country):
+def plot_technology(grouped_data, country, data_frame):
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -440,7 +440,7 @@ def plot_technology(grouped_data, country):
 
     # Rick added a pivot table plot -------#
     
-    technology_df_for_pivot = compare_by_internet(df, country)
+    technology_df_for_pivot = compare_by_internet(data_frame, country)
     #print(digital_infrastructure_df_for_pivot)
     technology_pivot_table = technology_df_for_pivot.pivot_table('Internet_Penetration_Rate', index='year', columns='country')
     plot_3 = axs[2]
@@ -462,12 +462,12 @@ def plot_technology(grouped_data, country):
     plt.savefig(filename)
     plt.show()
 
-#plot_technology(plot_df, country)
+#plot_technology(plot_df, country, df)
 
 category = 'Digital Infrastructure'
 plot_df = analyze_data(df, category, country)
 
-def plot_digital_infrastructure(grouped_data, country):
+def plot_digital_infrastructure(grouped_data, country, data_frame):
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -506,7 +506,7 @@ def plot_digital_infrastructure(grouped_data, country):
 
     # Rick added a pivot table plot -------#
 
-    digital_infrastructure_df_for_pivot = compare_by_cell_phone(df, country)
+    digital_infrastructure_df_for_pivot = compare_by_cell_phone(data_frame, country)
     #print(digital_infrastructure_df_for_pivot)
     digital_infrastructure_pivot_table = digital_infrastructure_df_for_pivot.pivot_table('Cell_phone_per_capita', index='year', columns='country')
     plot_3 = axs[2]
@@ -527,4 +527,4 @@ def plot_digital_infrastructure(grouped_data, country):
     plt.savefig(filename)
     plt.show()
 
-#plot_digital_infrastructure(plot_df, country)
+#plot_digital_infrastructure(plot_df, country, df)
