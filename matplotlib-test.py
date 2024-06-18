@@ -97,8 +97,8 @@ def add_columns(df):
         df['GDP_per_capita'] = df['GDP_USD_Total'] / df['population']
         # percentage of the total population that has access to the Internet
         df['Internet_Penetration_Rate'] = (df['internet'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
-        df['Energy_per_capita'] = (df['residential_electricity_use'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
-        df['Cell_phone_per_capita'] = (df['cell_phone_total'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
+        df['Energy_per_capita'] = (df['residential_electricity_use'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float))
+        df['Cell_phone_per_capita'] = (df['cell_phone_total'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float))
         print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate, Energy_per_capita, Cell_phone_per_capita\n")
     except Exception as e:
         print(f"Failed to add columns, an error occurred: {e}.")
@@ -192,7 +192,7 @@ df = pd.read_csv('df_final.csv')
 df = add_columns(df)
 
 category = 'Life Quality'
-country = 'China'
+country = 'UAE'
 plot_df = analyze_data(df, category, country)
 
 def plot_life_quality(grouped_data, country):
@@ -328,12 +328,31 @@ def plot_energy(grouped_data, country):
     ax3.legend(loc='upper left')
     ax3.set_title('Internet Users')
 
+    # Rick added a pivot table plot -------#
+
+    energy_df_for_pivot = compare_by_energy(df, country)
+    #print(digital_infrastructure_df_for_pivot)
+    energy_pivot_table = energy_df_for_pivot.pivot_table('Energy_per_capita', index='year', columns='country')
+    plot_3 = axs[2]
+    plot_3.set_title(' '.join(['Electricity per Capita', ''.join(['(', country]) , 'vs the highest and lowest in the world)']))
+    plot_3.set_xlabel('Year')
+    plot_3.set_ylabel('Electricity per Capita (KWh)')
+    plot_3.plot(energy_pivot_table, marker='o', linestyle='-')
+    plot_3.set_xticks(np.arange(energy_df_for_pivot['year'].min(), energy_df_for_pivot['year'].max() + 1, 1))
+    plot_3.legend(energy_pivot_table.columns)
+
+
+   
+    # -------------------------------------#
+
+
+
     # Save the plot as a PNG file
     filename = f'output/energy_{country.lower()}_grouped.png'
     plt.savefig(filename)
     plt.show()
 
-#plot_energy(plot_df, country)
+plot_energy(plot_df, country)
 
 category = 'Technology'
 plot_df = analyze_data(df, category, country)
@@ -453,9 +472,9 @@ def plot_digital_infrastructure(grouped_data, country):
     #print(digital_infrastructure_df_for_pivot)
     digital_infrastructure_pivot_table = digital_infrastructure_df_for_pivot.pivot_table('Cell_phone_per_capita', index='year', columns='country')
     plot_3 = axs[2]
-    plot_3.set_title(' '.join(['Cell Phone per 100 People', ''.join(['(', country]) , 'vs the highest and lowest in the world)']))
+    plot_3.set_title(' '.join(['Cell Phone per Capita', ''.join(['(', country]) , 'vs the highest and lowest in the world)']))
     plot_3.set_xlabel('Year')
-    plot_3.set_ylabel('Cell Phone per 100 People')
+    plot_3.set_ylabel('Cell Phone per Capita')
     plot_3.plot(digital_infrastructure_pivot_table, marker='o', linestyle='-')
     plot_3.set_xticks(np.arange(digital_infrastructure_df_for_pivot['year'].min(), digital_infrastructure_df_for_pivot['year'].max() + 1, 1))
     plot_3.legend(digital_infrastructure_pivot_table.columns)
