@@ -238,12 +238,31 @@ def plot_life_quality(grouped_data, country):
     ax4.legend(loc='upper right')
     ax3.set_title('Number of Cellphones and Internet Users')
 
+
+    # Rick added a pivot table plot -------#
+
+    life_exp_df_for_pivot = compare_by_life_exp(df, country)
+    #print(digital_infrastructure_df_for_pivot)
+    life_exp_pivot_table = life_exp_df_for_pivot.pivot_table('life_exp_year', index='year', columns='country')
+    plot_3 = axs[2]
+    plot_3.set_title(' '.join(['Life Expectancy (Years)', ''.join(['(', country]) , 'vs the highest and lowest in the world)']))
+    plot_3.set_xlabel('Year')
+    plot_3.set_ylabel('Life Expectancy (Years)')
+    plot_3.plot(life_exp_pivot_table, marker='o', linestyle='-')
+    plot_3.set_xticks(np.arange(life_exp_df_for_pivot['year'].min(), life_exp_df_for_pivot['year'].max() + 1, 1))
+    plot_3.legend(life_exp_pivot_table.columns)
+
+
+   
+    # -------------------------------------#
+
+
     # Save the plot as a PNG file
     filename = f'output/life_quality_{country.lower()}_grouped.png'
     plt.savefig(filename)
     plt.show()
 
-#plot_life_quality(plot_df, country)
+plot_life_quality(plot_df, country)
 
 category = 'Economy'
 plot_df = analyze_data(df, category, country)
@@ -281,6 +300,25 @@ def plot_economy(grouped_data, country):
     ax3.tick_params(axis='y', labelcolor='r')
     ax3.legend(loc='upper left')
     ax3.set_title('Inflation')
+
+
+    # Rick added a pivot table plot -------#
+
+    economy_df_for_pivot = compare_by_GDP(df, country)
+    #print(digital_infrastructure_df_for_pivot)
+    economy_pivot_table = economy_df_for_pivot.pivot_table('GDP_per_capita', index='year', columns='country')
+    plot_3 = axs[2]
+    plot_3.set_title(' '.join(['GDP_per_capita', ''.join(['(', country]) , 'vs the highest and lowest in the world)']))
+    plot_3.set_xlabel('Year')
+    plot_3.set_ylabel('GDP per Capita (USD)')
+    plot_3.plot(economy_pivot_table, marker='o', linestyle='-')
+    plot_3.set_xticks(np.arange(economy_df_for_pivot['year'].min(), economy_df_for_pivot['year'].max() + 1, 1))
+    plot_3.legend(economy_pivot_table.columns)
+
+
+   
+    # -------------------------------------#
+
 
     filename = f'output/economy_{country.lower()}_grouped.png'
     plt.savefig(filename)
@@ -352,7 +390,7 @@ def plot_energy(grouped_data, country):
     plt.savefig(filename)
     plt.show()
 
-plot_energy(plot_df, country)
+#plot_energy(plot_df, country)
 
 category = 'Technology'
 plot_df = analyze_data(df, category, country)
