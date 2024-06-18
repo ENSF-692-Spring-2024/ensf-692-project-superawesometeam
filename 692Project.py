@@ -11,6 +11,7 @@
 from ImportCSV import process_str_csv_file
 from ImportCSV import process_float_csv_file
 
+
 import pandas as pd
 
 # Stage 1 & 2
@@ -181,6 +182,7 @@ def analyze_data(df, category, country):
 
     print("\nFinal dataframe saved as: output/df_export\n")
     df.to_csv("output/df_export.csv", index = True, header = True)
+    return grouped_data
     
 
 def get_user_input(prompt, options):
@@ -286,7 +288,7 @@ def main():
             category, country = get_user_selection(df)
             if category is None or country is None:
                 break
-            analyze_data(df, category, country)
+            df_for_plot = analyze_data(df, category, country)
     except Exception as e:
         print(f"An error occurred: {e}. \n\nExiting the program.")
         return
