@@ -313,8 +313,9 @@ def main():
             if category is None or country is None:
                 break
             df_for_plot = analyze_data(df, category, country)
-
-            plot_after_analysis(df_for_plot, df, category, country_raw)
+            plot_or_not = input("Do you want to view and store analysis plots for current country? (1 for yes, 2 for no)     ")
+            if(plot_or_not == "1"):
+                plot_after_analysis(df_for_plot, df, category, country_raw)
     except Exception as e:
         print(f"An error occurred: {e}. \n\nExiting the program.")
         return

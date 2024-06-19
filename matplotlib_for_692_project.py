@@ -111,7 +111,7 @@ def add_columns(df):
 
 
 def compare_by_GDP(data_frame, country):
-    df_gdp_per_capita = pd.DataFrame(data_frame['GDP_per_capita'].groupby(df['country']).mean())
+    df_gdp_per_capita = pd.DataFrame(data_frame['GDP_per_capita'].groupby(data_frame['country']).mean())
     max_value = df_gdp_per_capita.max().values[0]
     min_value = df_gdp_per_capita.min().values[0]
     df_mean = df_gdp_per_capita.reset_index()
@@ -125,7 +125,7 @@ def compare_by_GDP(data_frame, country):
     return compare_by_GDP_table.reset_index()
 
 def compare_by_internet(data_frame, country):
-    df_internet = pd.DataFrame(data_frame['Internet_Penetration_Rate'].groupby(df['country']).mean())
+    df_internet = pd.DataFrame(data_frame['Internet_Penetration_Rate'].groupby(data_frame['country']).mean())
     max_value = df_internet.max().values[0]
     min_value = df_internet.min().values[0]
     df_mean = df_internet.reset_index()
@@ -139,7 +139,7 @@ def compare_by_internet(data_frame, country):
     return compare_by_internet_table.reset_index()
 
 def compare_by_life_exp(data_frame, country):
-    df_life_exp = pd.DataFrame(data_frame['life_exp_year'].groupby(df['country']).mean())
+    df_life_exp = pd.DataFrame(data_frame['life_exp_year'].groupby(data_frame['country']).mean())
     max_value = df_life_exp.max().values[0]
     min_value = df_life_exp.min().values[0]
     df_mean = df_life_exp.reset_index()
@@ -154,7 +154,7 @@ def compare_by_life_exp(data_frame, country):
 
 
 def compare_by_energy(data_frame, country):
-    df_energy = pd.DataFrame(data_frame['Energy_per_capita'].groupby(df['country']).mean())
+    df_energy = pd.DataFrame(data_frame['Energy_per_capita'].groupby(data_frame['country']).mean())
     max_value = df_energy.max().values[0]
     min_value = df_energy.min().values[0]
     df_mean = df_energy.reset_index()
@@ -168,7 +168,7 @@ def compare_by_energy(data_frame, country):
     return compare_by_energy_table.reset_index()
 
 def compare_by_cell_phone(data_frame, country):
-    df_cell_phone = pd.DataFrame(data_frame['Cell_phone_per_capita'].groupby(df['country']).mean())
+    df_cell_phone = pd.DataFrame(data_frame['Cell_phone_per_capita'].groupby(data_frame['country']).mean())
     max_value = df_cell_phone.max().values[0]
     min_value = df_cell_phone.min().values[0]
     df_mean = df_cell_phone.reset_index()
@@ -188,12 +188,12 @@ def compare_by_cell_phone(data_frame, country):
 
 
 
-df = pd.read_csv('df_final.csv')
-df = add_columns(df)
+#df = pd.read_csv('df_final.csv')
+#df = add_columns(df)
 
-category = 'Life Quality'
-country = 'UAE'
-plot_df = analyze_data(df, category, country)
+#category = 'Life Quality'
+#country = 'Egypt'
+#plot_df = analyze_data(df, category, country)
 
 def plot_life_quality(grouped_data, country, data_frame):
     years = grouped_data.index
@@ -264,8 +264,8 @@ def plot_life_quality(grouped_data, country, data_frame):
 
 #plot_life_quality(plot_df, country, df)
 
-category = 'Economy'
-plot_df = analyze_data(df, category, country)
+#category = 'Economy'
+#plot_df = analyze_data(df, category, country)
 
 def plot_economy(grouped_data, country, data_frame):
     years = grouped_data.index
@@ -326,8 +326,8 @@ def plot_economy(grouped_data, country, data_frame):
 
 #plot_economy(plot_df, country,df)
 
-category = 'Energy'
-plot_df = analyze_data(df, category, country)
+#category = 'Energy'
+#plot_df = analyze_data(df, category, country)
 
 def plot_energy(grouped_data, country, data_frame):
     years = grouped_data.index
@@ -337,7 +337,7 @@ def plot_energy(grouped_data, country, data_frame):
     # Convert units as necessary
     electricity_generation = grouped_data['electricity_generation'] / 1e6  # Convert MWh to million MWh
     coal_consumption = grouped_data['coal'] / 1e6  # Convert tons to million tons
-    internet_users = grouped_data['Internet_Penetration_Rate']  # Already in percentage
+    internet_users = grouped_data['internet']  # Already in percentage
 
     # Creating figure and subplots
     fig, axs = plt.subplots(3, 1, figsize=(12, 8), constrained_layout=True)
@@ -392,8 +392,8 @@ def plot_energy(grouped_data, country, data_frame):
 
 #plot_energy(plot_df, country, df)
 
-category = 'Technology'
-plot_df = analyze_data(df, category, country)
+#category = 'Technology'
+#plot_df = analyze_data(df, category, country)
 
 def plot_technology(grouped_data, country, data_frame):
     years = grouped_data.index
@@ -464,8 +464,8 @@ def plot_technology(grouped_data, country, data_frame):
 
 #plot_technology(plot_df, country, df)
 
-category = 'Digital Infrastructure'
-plot_df = analyze_data(df, category, country)
+#category = 'Digital Infrastructure'
+#plot_df = analyze_data(df, category, country)
 
 def plot_digital_infrastructure(grouped_data, country, data_frame):
     years = grouped_data.index
