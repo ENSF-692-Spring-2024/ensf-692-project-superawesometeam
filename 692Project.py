@@ -174,13 +174,13 @@ def analyze_data(df, category, country):
 
     print("Category specific aggregation and analysis:")
     print(grouped_data.describe())                          
-    print("Pivot table for visualizing trends:")
+    print("\nPivot table for visualizing trends:")
     print(pivot)
 
     filename = f"output/{category.replace(' ', '_').lower()}_{country.lower()}_pivot.csv"
 
     pivot.to_csv(filename)
-    print(f"Pivot table saved as '{filename}'.")
+    print(f"\nPivot table saved as '{filename}'.")
 
     print("\nFinal dataframe saved as: output/df_export\n")
     df.to_csv("output/df_export.csv", index = True, header = True)
@@ -248,16 +248,16 @@ def get_user_selection(df):
     category_code, category_code_raw = get_user_input(info_prompt, [str(i) for i in range(6)])
     if category_code == '0':
         print("***Exiting the program***")
-        return None, None
+        return None, None, None
     
     # Print the list of countries available for analysis
-    valid_countries = [str(val).lower() for val in df['country'].unique()]
+    valid_countries = [str(val) for val in df['country'].unique()]
     print("\n\nAvailable countries:")
     for country in sorted(valid_countries):
-        print(country.capitalize(), end="  ")
+        print(country, end="  ")
 
     category = categories[category_code]
-    country_prompt = "\n\n\nPlease enter the country you want to analyze: "
+    country_prompt = "\n\n\nPlease enter the country you want to analyze (Enter in displayed format): "
     valid_countries = [str(val).lower() for val in df['country'].unique()]
     #country, country_raw = get_user_input(country_prompt, valid_countries)
     country, country_raw= get_user_input(country_prompt, valid_countries)
@@ -270,10 +270,10 @@ def load_data_choice():
     """
     Function to prompt the user to choose between re-importing the data or using the preloaded data.
     """
-    print("\n\n******* Data analysis program *******")
+    print("\n\n\n\n******* Data analysis program *******")
     while True:
         try:
-            choice = input("\nDo you want to: \n1. Re-import data. (Do this if you want to see the csv files merging)  \n2. Use preloaded data. (Do this to save time and utilize merged dataset)  \n\nPlease enter '1' or '2': ").strip().lower()
+            choice = input("\nDo you want to: \n1. Re-import data. (Do this if you want to see the csv files importing and merging)  \n2. Use preloaded data. (Do this to save time and utilize merged dataset)\n0. Exit\n\nPlease make a selection by entering a number: ").strip()
             if choice == '1':
                 return loaddata()
             elif choice == '2':
@@ -282,10 +282,12 @@ def load_data_choice():
                 except FileNotFoundError:
                     print("File df_final.csv not found. Loading new data instead.")
                     return loaddata()
+            elif choice == '0':
+                return pd.DataFrame() # Empty DataFrame to exit the program
             else:
-                raise ValueError("Invalid choice. Please enter '1' or '2'.")
+                raise ValueError("Invalid choice. Please enter '1','2', or '0'.")
         except ValueError as e:
-            print(f"An error occurred: {e} Please try again.")
+            print(f"An error occurred: {e}")
 
 def plot_after_analysis(grouped_data, data_frame, category, country):
 
@@ -303,7 +305,10 @@ def plot_after_analysis(grouped_data, data_frame, category, country):
 def main():
     try:
         df = load_data_choice()
-        df = add_columns(df) # Can be used for plot
+        if df.empty: # Exit the program if the DataFrame is empty
+            print("***Exiting the program***")
+            return
+        df = add_columns(df) 
         print("\nAggregate statistics for the entire dataset:")
         print(df.describe())
         while True:
@@ -313,8 +318,9 @@ def main():
             if category is None or country is None:
                 break
             df_for_plot = analyze_data(df, category, country)
-            plot_or_not = input("Do you want to view and store analysis plots for current country? (1 for yes, 2 for no)     ")
+            plot_or_not = input("Do you want to view and store analysis plots for current country? (1 for yes, 2 for no): ")
             if(plot_or_not == "1"):
+                print("\nPlotting the data...\nClose the plot window to continue the program.")
                 plot_after_analysis(df_for_plot, df, category, country_raw)
     except Exception as e:
         print(f"An error occurred: {e}. \n\nExiting the program.")

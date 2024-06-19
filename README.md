@@ -3,7 +3,7 @@
 # Group members: Bo Zheng Ma, Rick Zhang, Warisa Khaophong 
 
 
-## Goals:
+## Outline:
 * Design and document a terminal-based Python application
 * Select, import, and manipulate a set of data
 * Merge multiple datasets using Pandas
@@ -12,11 +12,12 @@
 * Operate on data in Pandas and NumPy
 * Display data using Matplotlib
 
-## Outline:
+
+## Goal:
 * Our goal with this project is to create a program that imports datasets containing information of global socio-economic and technological data. We want to present the user a way of seeing such trends within select countries and allow them to perform insightful analysis.
 
 
-## Our selected datasets:
+## Selected datasets:
 * Number of Cellphones 
 * Total Coal Consumption 
 * ELectricity generated 
@@ -32,7 +33,7 @@
 * Clone the repository onto your local machine
 * Ensure that python along with pandas are installed properly.
     * Change working directory to ensf-692-project-super-awesometeam
-    * Run 692Project.py by typing: python 692Project.py
+    * python 692Project.py
 
 ## Input:
 * The program will process datasets from 'src' folder and merge them into 'df_final.csv'

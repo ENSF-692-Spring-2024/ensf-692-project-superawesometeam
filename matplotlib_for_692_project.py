@@ -474,7 +474,7 @@ def plot_digital_infrastructure(grouped_data, country, data_frame):
 
     # Extracting data for each subplot
     cellphones = grouped_data['cell_phone_total'] / 1e8  # Convert to 100 Million
-    internet_users = grouped_data['Internet_Penetration_Rate']
+    internet_users = grouped_data['internet']
     electricity_generation = grouped_data['electricity_generation'] / 1e6  # Convert to Million MWh
     
     # Creating figure and subplots
@@ -488,7 +488,7 @@ def plot_digital_infrastructure(grouped_data, country, data_frame):
     ax2.plot(years, internet_users, marker='o', linestyle='-', color='g', label='Internet Users')
     ax1.set_xlabel('Year')
     ax1.set_ylabel('Number of Cellphones (100 Million)', color='b')
-    ax2.set_ylabel('Internet Users (Percentage)', color='g')
+    ax2.set_ylabel('Internet Users', color='g')
     ax1.tick_params(axis='y', labelcolor='b')
     ax2.tick_params(axis='y', labelcolor='g')
     ax1.legend(loc='upper left')
