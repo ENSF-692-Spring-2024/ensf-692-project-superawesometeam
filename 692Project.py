@@ -308,7 +308,8 @@ def main():
         if df.empty: # Exit the program if the DataFrame is empty
             print("***Exiting the program***")
             return
-        df = add_columns(df) 
+        df = add_columns(df)
+        df.to_csv("df_final_15.csv", index = True, header = True)
         print("\nAggregate statistics for the entire dataset:")
         print(df.describe())
         while True:
