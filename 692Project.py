@@ -290,6 +290,15 @@ def load_data_choice():
             print(f"An error occurred: {e}")
 
 def plot_after_analysis(grouped_data, data_frame, category, country):
+    '''
+    Generate, show, and save plots after analysis
+    :@param 
+        grouped_data (pandas data frame): data frame returned by function analyze_data
+        data_frame (pandas data frame): data frame before running analyze_data, after running add_colums
+        category (str): category selected by user
+        country (str): countery selected by user
+    :@return: None
+    '''
 
     if category == 'Life Quality':
         plot_life_quality(grouped_data, country, data_frame)
@@ -320,7 +329,7 @@ def main():
                 break
             df_for_plot = analyze_data(df, category, country)
             plot_or_not = input("Do you want to view and store analysis plots for current country? (1 for yes, 2 for no): ")
-            if(plot_or_not == "1"):
+            if(plot_or_not == "1"): # Ask user if to show and save plot
                 print("\nPlotting the data...\nClose the plot window to continue the program.")
                 plot_after_analysis(df_for_plot, df, category, country_raw)
     except Exception as e:

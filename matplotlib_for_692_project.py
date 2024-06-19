@@ -5,112 +5,20 @@ import numpy as np
 
 #Author: Warisa
 
-def analyze_data(df, category, country):
-    '''
-    Analyze the data for the selected category and country
-    :param df: dataframe to analyze
-    :param category: category to analyze
-    :param country: country to analyze
-    '''
-
-    print(f"\nAnalyzing {category} data for {country.upper()}:")
-    df_country = df[df['country'].str.lower() == country.lower()]
-
-    # masking to focus on relevant data points for each analysis
-    df_country = df_country[df_country['GDP_USD_Total'] > (df_country['GDP_USD_Total'].max()*0.25)]  # masking operation
-
-    if category == 'Life Quality':
-        # Life Expectancy, Total GDP, Number of Cellphones, Internet Users
-        grouped_data = df_country.groupby('year').agg({
-            'life_exp_year': 'mean', 
-            'GDP_per_capita': 'mean',
-            'cell_phone_total': 'sum',
-            'Internet_Penetration_Rate': 'mean',
-            'population': 'max'  # Ensure population is included
-        })
-
-        pivot = pd.pivot_table(df_country, values=['GDP_per_capita', 'life_exp_year', 'cell_phone_total', 'Internet_Penetration_Rate'], index='country', columns='year', aggfunc='mean')
-
-    elif category == 'Economy':
-        # Total GDP, Population, Inflation
-        grouped_data = df_country.groupby('year').agg({
-            'GDP_USD_Total': 'sum', 
-            'population': 'max', 
-            'inflation_percent': 'mean'
-        })
-        pivot = pd.pivot_table(df_country, values=['GDP_USD_Total', 'population', 'inflation_percent'], index='country', columns='year', aggfunc='mean')
-
-    elif category == 'Energy':
-        # Electricity Generation, Coal Consumption, Internet Users
-        grouped_data = df_country.groupby('year').agg({
-            'electricity_generation': 'sum', 
-            'coal': 'mean', 
-            'Internet_Penetration_Rate': 'mean'
-        })
-        pivot = pd.pivot_table(df_country, values=['electricity_generation', 'coal', 'Internet_Penetration_Rate'], index='country', columns='year', aggfunc='mean')
-
-    elif category == 'Technology':
-        # Number of Cellphones, Internet Users, Total GDP, Daily Income
-        grouped_data = df_country.groupby('year').agg({
-            'cell_phone_total': 'sum', 
-            'Internet_Penetration_Rate': 'mean', 
-            'GDP_USD_Total': 'sum',
-            'daily_income': 'mean'
-        })
-        pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'Internet_Penetration_Rate', 'GDP_USD_Total', 'daily_income'], index='country', columns='year', aggfunc='mean')
-
-    elif category == 'Digital Infrastructure':
-        # Number of Cellphones, Internet Users, Electricity Generation
-        grouped_data = df_country.groupby('year').agg({
-            'cell_phone_total': 'sum', 
-            'Internet_Penetration_Rate': 'mean', 
-            'electricity_generation': 'sum'
-        })
-        pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'Internet_Penetration_Rate', 'electricity_generation'], index='country', columns='year', aggfunc='mean')
-
-    print("Category specific aggregation and analysis:")
-    print(grouped_data.describe())                          # Aggregation computation
-    print("Pivot table for visualizing trends:")
-    print(pivot)
-
-    filename = f"output/{category.replace(' ', '_').lower()}_{country.lower()}_pivot.csv"
-
-    pivot.to_csv(filename)
-    print(f"Pivot table saved as '{filename}'.")
-
-    # Warisa added return at June12th
-    #
-    #
-    # Notice Frank to return a value
-    return grouped_data
-
-def add_columns(df):
-    '''
-    Add columns to the dataframe for GDP per capita and Internet Penetration Rate
-    :@param df: dataframe to add columns to
-    :@return: dataframe with added columns
-    '''
-
-    print("\nAdding columns to the dataframe...")
-    try:
-        # GDP per capita
-        df['GDP_per_capita'] = df['GDP_USD_Total'] / df['population']
-        # percentage of the total population that has access to the Internet
-        df['Internet_Penetration_Rate'] = (df['internet'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float)) * 100
-        df['Energy_per_capita'] = (df['residential_electricity_use'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float))
-        df['Cell_phone_per_capita'] = (df['cell_phone_total'].replace(',', '').astype(float) / df['population'].replace(',', '').astype(float))
-        print("Successfully added columns: GDP_per_capita, Internet_Penetration_Rate, Energy_per_capita, Cell_phone_per_capita\n")
-    except Exception as e:
-        print(f"Failed to add columns, an error occurred: {e}.")
-    
-    
-    return df
-
 # -----------   Rick's Functions for pivot table ploting   -----------------#
 
 
 
 def compare_by_GDP(data_frame, country):
+    """
+    Reduce original data frame to selected country, country with highest GDP_per_capita, and country with lowest GDP_per_capita
+
+    Args:
+        data_frame (pandas data frame): data frame before running analyze_data, after adding add_columns
+
+    Returns:
+        compare_by_GDP_table ( pandas data frame): reduced data frame that contains data of selected country, country with highest GDP_per_capita
+    """
     df_gdp_per_capita = pd.DataFrame(data_frame['GDP_per_capita'].groupby(data_frame['country']).mean())
     max_value = df_gdp_per_capita.max().values[0]
     min_value = df_gdp_per_capita.min().values[0]
@@ -125,6 +33,16 @@ def compare_by_GDP(data_frame, country):
     return compare_by_GDP_table.reset_index()
 
 def compare_by_internet(data_frame, country):
+    """
+    Reduce original data frame to selected country, country with highest Internet_Penetration_Rate, coutry with lowest Internet_Penetration_Rate
+
+    Args:
+        data_frame (pandas data frame): data frame before running analyze_data, after adding add_columns
+
+    Returns:
+        compare_by_internet_table (pandas data frame): reduced data frame that contains data of selected country, country with highest Internet_Penetration_Rate, coutry with lowest Internet_Penetration_Rate
+
+    """
     df_internet = pd.DataFrame(data_frame['Internet_Penetration_Rate'].groupby(data_frame['country']).mean())
     max_value = df_internet.max().values[0]
     min_value = df_internet.min().values[0]
@@ -139,6 +57,16 @@ def compare_by_internet(data_frame, country):
     return compare_by_internet_table.reset_index()
 
 def compare_by_life_exp(data_frame, country):
+    """
+    Reduce original data frame to selected country, country with highest life_exp_year, coutry with lowest life_exp_year
+
+    Args:
+        data_frame (pandas data frame): data frame before running analyze_data, after adding add_columns
+
+    Returns:
+        compare_by_life_exp_table (pandas data frame): reduced data frame that contains data of selected country, country with highest life_exp_year, coutry with lowest life_exp_year
+
+    """
     df_life_exp = pd.DataFrame(data_frame['life_exp_year'].groupby(data_frame['country']).mean())
     max_value = df_life_exp.max().values[0]
     min_value = df_life_exp.min().values[0]
@@ -154,6 +82,16 @@ def compare_by_life_exp(data_frame, country):
 
 
 def compare_by_energy(data_frame, country):
+    """
+    Reduce original data frame to selected country, country with highest Energy_per_capita, coutry with lowest Energy_per_capita
+
+    Args:
+        data_frame (pandas data frame): data frame before running analyze_data, after adding add_columns
+
+    Returns:
+        compare_by_energy_table (pandas data frame): reduced data frame that contains data of selected country, country with highest Energy_per_capita, coutry with lowest Energy_per_capita
+
+    """
     df_energy = pd.DataFrame(data_frame['Energy_per_capita'].groupby(data_frame['country']).mean())
     max_value = df_energy.max().values[0]
     min_value = df_energy.min().values[0]
@@ -168,6 +106,16 @@ def compare_by_energy(data_frame, country):
     return compare_by_energy_table.reset_index()
 
 def compare_by_cell_phone(data_frame, country):
+    """
+    Reduce original data frame to selected country, country with highest Cell_phone_per_capita, coutry with lowest Cell_phone_per_capita
+
+    Args:
+        data_frame (pandas data frame): data frame before running analyze_data, after adding add_columns
+
+    Returns:
+        compare_by_cell_phone_table (pandas data frame): reduced data frame that contains data of selected country, country with highest Cell_phone_per_capita, coutry with lowest Cell_phone_per_capita
+
+    """
     df_cell_phone = pd.DataFrame(data_frame['Cell_phone_per_capita'].groupby(data_frame['country']).mean())
     max_value = df_cell_phone.max().values[0]
     min_value = df_cell_phone.min().values[0]
