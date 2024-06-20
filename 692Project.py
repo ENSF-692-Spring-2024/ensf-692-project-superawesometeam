@@ -2,6 +2,7 @@
 # Super Awesome Team
 # Members: Bo Zheng, Rick, Warisa
 #
+# This file contains the main loop
 # To run the file, make sure to use the command: python 692Project.py while in the directory, and not run it directly using VSCode
 # Program will merge all csv files into one csv file, and perform analysis and plot graphs using the data. 
 #

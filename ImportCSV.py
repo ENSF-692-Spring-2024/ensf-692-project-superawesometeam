@@ -5,6 +5,7 @@ import numpy as np
 # Super Awesome Team
 # Members: Bo Zheng, Rick, Warisa
 
+# Main loop is in 692Project.py
 # Import data from CSV file
 # Change header to dtype int
 # Combine header year and index country as multiindex
