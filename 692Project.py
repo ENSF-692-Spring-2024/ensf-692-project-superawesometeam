@@ -3,20 +3,22 @@
 # Members: Bo Zheng, Rick, Warisa
 #
 # To run the file, make sure to use the command: python 692Project.py while in the directory, and not run it directly using VSCode
-# Program to merge all csv files into one csv file, and perform analysis and plot graphs using the data. 
+# Program will merge all csv files into one csv file, and perform analysis and plot graphs using the data. 
+#
 # Will output a csv file with the pivot table data for the selected category and country.
 # Will output a png file containing the plot of the data.
 # Will output a csv file containing the final dataframe.
+#
+# Sample exeuction is located in /execution_sample/ folder
+# Outputted dataframes, pivot tables, and plots are located in /output/ folder
 
 from ImportCSV import process_str_csv_file
 from ImportCSV import process_float_csv_file
-from matplotlib_for_692_project import compare_by_cell_phone, compare_by_GDP, compare_by_energy, compare_by_internet, compare_by_life_exp
 from matplotlib_for_692_project import plot_digital_infrastructure, plot_economy, plot_energy, plot_life_quality, plot_technology
 
 
 import pandas as pd
 
-# Stage 1 & 2
 def loaddata():
     '''
     Load all data from 10 csv files and merge them into one dataframe
@@ -89,8 +91,12 @@ def loaddata():
 def add_columns(df):
     '''
     Add columns to the dataframe for GDP per capita and Internet Penetration Rate
-    :@param df: dataframe to add columns to
-    :@return: dataframe with added columns
+    
+    Args:
+        df (DataFrame): The DataFrame containing the dataset.
+    
+    Returns:
+        DataFrame: The DataFrame with the added columns.
     '''
 
     print("\nAdding columns to the dataframe...")
@@ -111,9 +117,16 @@ def add_columns(df):
 def analyze_data(df, category, country):
     '''
     Analyze the data for the selected category and country
-    :@param df: dataframe to analyze
-    :@param category: category to analyze
-    :@param country: country to analyze
+    
+    Args:
+        df (DataFrame): The DataFrame containing the dataset.
+        category (str): The category selected by the user.
+        country (str): The country selected by the user.
+    
+    Returns:
+        DataFrame: The grouped data for the selected category and country.
+
+
     '''
 
     print(f"\nAnalyzing {category} data for {country.upper()}:")
@@ -174,10 +187,12 @@ def analyze_data(df, category, country):
 
     print("Category specific aggregation and analysis:")
     print(grouped_data.describe())                          
+    
+    # Unused for our final submission
     # print("\nPivot table for visualizing trends:")
     # print(pivot)
 
-    filename = f"output/{category.replace(' ', '_').lower()}_{country.lower()}_pivot.csv"
+    # filename = f"output/{category.replace(' ', '_').lower()}_{country.lower()}_pivot.csv"
 
     # pivot.to_csv(filename)
     # print(f"\nPivot table saved as :'{filename}'.")

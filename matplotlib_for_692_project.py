@@ -9,12 +9,6 @@ import numpy as np
 #
 # Functions to plot with matplotlib
 
-#Author: Warisa
-
-# -----------   Rick's Functions for pivot table ploting   -----------------#
-
-
-
 def compare_by_GDP(data_frame, country):
     """
     Reduce original data frame to selected country, country with highest GDP_per_capita, and country with lowest GDP_per_capita
@@ -104,9 +98,6 @@ def compare_by_energy(data_frame, country):
     df_mean = df_energy.reset_index()
     country_max = df_mean['country'][df_mean['Energy_per_capita'] == max_value].values[0]
     country_min = df_mean['country'][df_mean['Energy_per_capita'] == min_value].values[0]
-    #print("Max Internet", country_max, max_value)
-    #print("Min Internet", country_min, min_value)
-    #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
     compare_by_energy_table = pd.DataFrame(data_frame[['country', 'year','Energy_per_capita']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
     
     return compare_by_energy_table.reset_index()
@@ -128,28 +119,26 @@ def compare_by_cell_phone(data_frame, country):
     df_mean = df_cell_phone.reset_index()
     country_max = df_mean['country'][df_mean['Cell_phone_per_capita'] == max_value].values[0]
     country_min = df_mean['country'][df_mean['Cell_phone_per_capita'] == min_value].values[0]
-    #print("Max Internet", country_max, max_value)
-    #print("Min Internet", country_min, min_value)
-    #print(data_frame[['country', 'year','GDP_per_capita','Internet_Penetration_Rate', 'life_exp_year']][(z['country'] == country_max) | (z['country'] == country_min) | (z['country'] == 'China')])
     compare_by_cell_phone_table = pd.DataFrame(data_frame[['country', 'year','Cell_phone_per_capita']][(data_frame['country'] == country_max) | (data_frame['country'] == country_min) | (data_frame['country'] == country)])
     
     return compare_by_cell_phone_table.reset_index()
 
 
-
-
 #-----------------------------------------#
 
 
-
-#df = pd.read_csv('df_final.csv')
-#df = add_columns(df)
-
-#category = 'Life Quality'
-#country = 'Egypt'
-#plot_df = analyze_data(df, category, country)
-
 def plot_life_quality(grouped_data, country, data_frame):
+    """
+    Plot life quality trends for a given country. Also save a pivot table as a CSV file.
+
+    Args:
+        grouped_data (pandas data frame): data frame grouped by year
+        country (str): name of the country
+        data_frame (pandas data frame): original data frame
+    
+    Returns:
+        None
+    """
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -211,10 +200,7 @@ def plot_life_quality(grouped_data, country, data_frame):
     life_exp_pivot_table.to_csv(filename_pivot)
     print(f"\nPivot table saved as '{filename_pivot}'.")
 
-
-   
     # -------------------------------------#
-
 
     # Save the plot as a PNG file
     filename = f'output/life_quality_{country.lower()}_grouped.png'
@@ -222,12 +208,19 @@ def plot_life_quality(grouped_data, country, data_frame):
     plt.savefig(filename)
     plt.show()
 
-#plot_life_quality(plot_df, country, df)
-
-#category = 'Economy'
-#plot_df = analyze_data(df, category, country)
-
 def plot_economy(grouped_data, country, data_frame):
+    """
+    Plot economy trends for a given country. Also save a pivot table as a CSV file.
+
+    Args:
+        grouped_data (pandas data frame): data frame grouped by year
+        country (str): name of the country
+        data_frame (pandas data frame): original data frame
+    
+    Return:
+        None
+    
+    """
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -261,11 +254,7 @@ def plot_economy(grouped_data, country, data_frame):
     ax3.legend(loc='upper left')
     ax3.set_title('Inflation')
 
-
-    # Rick added a pivot table plot -------#
-
     economy_df_for_pivot = compare_by_GDP(data_frame, country)
-    #print(digital_infrastructure_df_for_pivot)
     economy_pivot_table = economy_df_for_pivot.pivot_table('GDP_per_capita', index='year', columns='country')
     plot_3 = axs[2]
     plot_3.set_title(' '.join(['GDP_per_capita', ''.join(['(', country]) , 'vs the highest and lowest in the world)']))
@@ -280,22 +269,25 @@ def plot_economy(grouped_data, country, data_frame):
     economy_pivot_table.to_csv(filename_pivot)
     print(f"\nPivot table saved as '{filename_pivot}'.")
 
-   
-   
     # -------------------------------------#
-
-
     filename = f'output/economy_{country.lower()}_grouped.png'
     print("\nGraph saved as:", filename, "\n")
     plt.savefig(filename)
     plt.show()
 
-#plot_economy(plot_df, country,df)
-
-#category = 'Energy'
-#plot_df = analyze_data(df, category, country)
 
 def plot_energy(grouped_data, country, data_frame):
+    """
+    Plot energy trends for a given country. Also save a pivot table as a CSV file.
+
+    Args:
+        grouped_data (pandas data frame): data frame grouped by year
+        country (str): name of the country
+        data_frame (pandas data frame): original data frame
+    
+    Returns:
+        None
+    """
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -350,11 +342,7 @@ def plot_energy(grouped_data, country, data_frame):
     energy_pivot_table.to_csv(filename_pivot)
     print(f"\nPivot table saved as '{filename_pivot}'.")
 
-   
-   
     # -------------------------------------#
-
-
 
     # Save the plot as a PNG file
     filename = f'output/energy_{country.lower()}_grouped.png'
@@ -363,12 +351,19 @@ def plot_energy(grouped_data, country, data_frame):
     plt.savefig(filename)
     plt.show()
 
-#plot_energy(plot_df, country, df)
-
-#category = 'Technology'
-#plot_df = analyze_data(df, category, country)
 
 def plot_technology(grouped_data, country, data_frame):
+    """
+    Plot technology trends for a given country. Also save a pivot table as a CSV file.
+
+    Args:
+        grouped_data (pandas data frame): data frame grouped by year
+        country (str): name of the country
+        data_frame (pandas data frame): original data frame
+
+    Returns:
+        None
+    """
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -429,12 +424,7 @@ def plot_technology(grouped_data, country, data_frame):
     technology_pivot_table.to_csv(filename_pivot)
     print(f"\nPivot table saved as '{filename_pivot}'.")
 
-  
-   
     # -------------------------------------#
-
-
-
     # Save the plot as a PNG file
     filename = f'output/technology_{country.lower()}_grouped.png'
     print("\nGraph saved as:", filename, "\n")
@@ -442,12 +432,19 @@ def plot_technology(grouped_data, country, data_frame):
     plt.savefig(filename)
     plt.show()
 
-#plot_technology(plot_df, country, df)
-
-#category = 'Digital Infrastructure'
-#plot_df = analyze_data(df, category, country)
 
 def plot_digital_infrastructure(grouped_data, country, data_frame):
+    """
+    Plot digital infrastructure trends for a given country. Also save a pivot table as a CSV file.
+
+    Args:
+        grouped_data (pandas data frame): data frame grouped by year
+        country (str): name of the country
+        data_frame (pandas data frame): original data frame
+    
+    Returns:
+        None
+    """
     years = grouped_data.index
     start_year = years.min()
     end_year = years.max()
@@ -502,15 +499,9 @@ def plot_digital_infrastructure(grouped_data, country, data_frame):
     digital_infrastructure_pivot_table.to_csv(filename_pivot)
     print(f"\nPivot table saved as '{filename_pivot}'.")
 
-   
-   
     # -------------------------------------#
-
-
     # Save the plot as a PNG file
     filename = f'output/digital_infrastructure_{country.lower()}_grouped.png'
     print("\nGraph saved as:", filename, "\n")
     plt.savefig(filename)
     plt.show()
-
-#plot_digital_infrastructure(plot_df, country, df)
