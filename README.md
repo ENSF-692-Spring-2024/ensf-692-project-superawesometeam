@@ -31,16 +31,18 @@
 
 ## How to run the program:
 * Clone the repository onto your local machine
-* Ensure that python along with pandas are installed properly.
+* Ensure that python along with pandas and matploblib are installed properly.
     * Change working directory to ensf-692-project-super-awesometeam
     * python 692Project.py
 
 ## Input:
-* The program will process datasets from 'src' folder and merge them into 'df_final.csv'
+* The program will process datasets from 'src' folder
 
 ## Output:
-* The program will take in 'df_final.csv' and output pivot tables and final dataframe (with added columns) to 'output' folder.
-* The plot png files will also be in 'output' folder
+* Merged dataframe containing the 10 datasets will be inside /output/df_merged.csv
+* Merged dataframe with additionally added columns will be inside /output/df_export.csv
+* Pivot tables of the selected country and topic will be in /output/
+* Plots of the selected country and topic will be in /output/
 
 ## Documentation/Report:
 * The report is located in this repository along with the powerpoint presentation.

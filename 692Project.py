@@ -80,8 +80,8 @@ def loaddata():
     print("Finished data merge.")
     print("Data preview:")
     print(df_final.head(3))
-
-    df_final.to_csv("df_final.csv", index = True, header = True)
+    print("\nSaving final dataframe to output/df_merged.csv\n")
+    df_final.to_csv("output/df_merged.csv", index = True, header = True)
     df_final.reset_index(inplace=True)
 
     return df_final
@@ -131,7 +131,7 @@ def analyze_data(df, category, country):
             'Internet_Penetration_Rate': 'mean'
         })
 
-        pivot = pd.pivot_table(df_country, values=['GDP_per_capita', 'life_exp_year', 'cell_phone_total', 'Internet_Penetration_Rate'], index='country', columns='year', aggfunc='mean')
+        # pivot = pd.pivot_table(df_country, values=['GDP_per_capita', 'life_exp_year', 'cell_phone_total', 'Internet_Penetration_Rate'], index='country', columns='year', aggfunc='mean')
         
 
     elif category == 'Economy':
@@ -141,7 +141,7 @@ def analyze_data(df, category, country):
             'population': 'max', 
             'inflation_percent': 'mean'
         })
-        pivot = pd.pivot_table(df_country, values=['GDP_USD_Total', 'population', 'inflation_percent'], index='country', columns='year', aggfunc='mean')
+        # pivot = pd.pivot_table(df_country, values=['GDP_USD_Total', 'population', 'inflation_percent'], index='country', columns='year', aggfunc='mean')
 
     elif category == 'Energy':
         # Electricity Generation, Coal Consumption, Internet Users
@@ -150,7 +150,7 @@ def analyze_data(df, category, country):
             'coal': 'mean', 
             'internet': 'mean'
         })
-        pivot = pd.pivot_table(df_country, values=['electricity_generation', 'coal', 'internet'], index='country', columns='year', aggfunc='mean')
+        # pivot = pd.pivot_table(df_country, values=['electricity_generation', 'coal', 'internet'], index='country', columns='year', aggfunc='mean')
 
     elif category == 'Technology':
         # Number of Cellphones, Internet penetration rate, Total GDP, Daily Income
@@ -160,7 +160,7 @@ def analyze_data(df, category, country):
             'GDP_USD_Total': 'sum',
             'daily_income': 'mean'
         })
-        pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'Internet_Penetration_Rate', 'GDP_USD_Total', 'daily_income'], index='country', columns='year', aggfunc='mean')
+        # pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'Internet_Penetration_Rate', 'GDP_USD_Total', 'daily_income'], index='country', columns='year', aggfunc='mean')
 
     elif category == 'Digital Infrastructure':
         # Number of Cellphones, Internet Users, Electricity Generation
@@ -169,18 +169,18 @@ def analyze_data(df, category, country):
             'internet': 'mean', 
             'electricity_generation': 'sum'
         })
-        pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'internet', 'electricity_generation'], index='country', columns='year', aggfunc='mean')
+        # pivot = pd.pivot_table(df_country, values=['cell_phone_total', 'internet', 'electricity_generation'], index='country', columns='year', aggfunc='mean')
     
 
     print("Category specific aggregation and analysis:")
     print(grouped_data.describe())                          
-    print("\nPivot table for visualizing trends:")
-    print(pivot)
+    # print("\nPivot table for visualizing trends:")
+    # print(pivot)
 
     filename = f"output/{category.replace(' ', '_').lower()}_{country.lower()}_pivot.csv"
 
-    pivot.to_csv(filename)
-    print(f"\nPivot table saved as :'{filename}'.")
+    # pivot.to_csv(filename)
+    # print(f"\nPivot table saved as :'{filename}'.")
 
     print("\nFinal dataframe saved as: 'output/df_export'\n")
     df.to_csv("output/df_export.csv", index = True, header = True)
@@ -247,7 +247,7 @@ def get_user_selection(df):
     info_prompt = "\nPlease select the information you want to retrieve by entering their corresponding number: "
     category_code, category_code_raw = get_user_input(info_prompt, [str(i) for i in range(6)])
     if category_code == '0':
-        print("***Exiting the program***")
+        print("\n***Exiting the program***")
         return None, None, None
     
     # Print the list of countries available for analysis
@@ -278,9 +278,9 @@ def load_data_choice():
                 return loaddata()
             elif choice == '2':
                 try:
-                    return pd.read_csv('df_final.csv')
+                    return pd.read_csv('output/df_merged.csv')
                 except FileNotFoundError:
-                    print("File df_final.csv not found. Loading new data instead.")
+                    print("File df_merged.csv not found. Loading new data instead.")
                     return loaddata()
             elif choice == '0':
                 return pd.DataFrame() # Empty DataFrame to exit the program
@@ -315,10 +315,9 @@ def main():
     try:
         df = load_data_choice()
         if df.empty: # Exit the program if the DataFrame is empty
-            print("***Exiting the program***")
+            print("\n***Exiting the program***")
             return
         df = add_columns(df)
-        df.to_csv("df_final_15.csv", index = True, header = True)
         print("\nAggregate statistics for the entire dataset:")
         print(df.describe())
         while True:
