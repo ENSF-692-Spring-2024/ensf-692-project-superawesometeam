@@ -207,6 +207,7 @@ def plot_life_quality(grouped_data, country, data_frame):
 
     # Save the plot as a PNG file
     filename = f'output/life_quality_{country.lower()}_grouped.png'
+    print("\nGraph saved as:", filename, "\n")
     plt.savefig(filename)
     plt.show()
 
@@ -269,6 +270,7 @@ def plot_economy(grouped_data, country, data_frame):
 
 
     filename = f'output/economy_{country.lower()}_grouped.png'
+    print("\nGraph saved as:", filename, "\n")
     plt.savefig(filename)
     plt.show()
 
@@ -335,6 +337,8 @@ def plot_energy(grouped_data, country, data_frame):
 
     # Save the plot as a PNG file
     filename = f'output/energy_{country.lower()}_grouped.png'
+    print("\nGraph saved as:", filename, "\n")
+    
     plt.savefig(filename)
     plt.show()
 
@@ -407,6 +411,8 @@ def plot_technology(grouped_data, country, data_frame):
 
     # Save the plot as a PNG file
     filename = f'output/technology_{country.lower()}_grouped.png'
+    print("\nGraph saved as:", filename, "\n")
+
     plt.savefig(filename)
     plt.show()
 
@@ -472,6 +478,7 @@ def plot_digital_infrastructure(grouped_data, country, data_frame):
 
     # Save the plot as a PNG file
     filename = f'output/digital_infrastructure_{country.lower()}_grouped.png'
+    print("\nGraph saved as:", filename, "\n")
     plt.savefig(filename)
     plt.show()
 

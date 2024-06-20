@@ -180,9 +180,9 @@ def analyze_data(df, category, country):
     filename = f"output/{category.replace(' ', '_').lower()}_{country.lower()}_pivot.csv"
 
     pivot.to_csv(filename)
-    print(f"\nPivot table saved as '{filename}'.")
+    print(f"\nPivot table saved as :'{filename}'.")
 
-    print("\nFinal dataframe saved as: output/df_export\n")
+    print("\nFinal dataframe saved as: 'output/df_export'\n")
     df.to_csv("output/df_export.csv", index = True, header = True)
     return grouped_data
     
