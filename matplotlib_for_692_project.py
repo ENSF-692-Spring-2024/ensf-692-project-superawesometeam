@@ -3,6 +3,12 @@ import matplotlib.pyplot as plt
 from ImportCSV import process_float_csv_file
 import numpy as np
 
+# ENSF692 Group Project
+# Super Awesome Team
+# Members: Bo Zheng, Rick, Warisa
+#
+# Functions to plot with matplotlib
+
 #Author: Warisa
 
 # -----------   Rick's Functions for pivot table ploting   -----------------#

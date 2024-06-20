@@ -1,6 +1,10 @@
 import pandas as pd
 import numpy as np
 
+# ENSF692 Group Project
+# Super Awesome Team
+# Members: Bo Zheng, Rick, Warisa
+
 # Import data from CSV file
 # Change header to dtype int
 # Combine header year and index country as multiindex
