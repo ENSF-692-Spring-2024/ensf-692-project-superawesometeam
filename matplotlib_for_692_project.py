@@ -7,6 +7,7 @@ import numpy as np
 # Super Awesome Team
 # Members: Bo Zheng, Rick, Warisa
 #
+# Main loop is in 692Project.py
 # Functions to plot with matplotlib
 
 #Author: Warisa
