@@ -328,10 +328,19 @@ def main():
             if category is None or country is None:
                 break
             df_for_plot = analyze_data(df, category, country)
-            plot_or_not = input("Do you want to view and store analysis plots for current country? (1 for yes, 2 for no): ")
-            if(plot_or_not == "1"): # Ask user if to show and save plot
-                print("\nPlotting the data...\nClose the plot window to continue the program.")
-                plot_after_analysis(df_for_plot, df, category, country_raw)
+            while True:
+                try:
+                    plot_or_not = input("Do you want to view and store analysis plots for current country? (1 for yes, 2 for no): ")
+                    if plot_or_not == "1":
+                        print("\nPlotting the data...\nClose the plot window to continue the program.")
+                        plot_after_analysis(df_for_plot, df, category, country_raw)
+                        break
+                    elif plot_or_not == "2":
+                        break
+                    else:
+                        raise ValueError("Invalid input. Please enter 1 for yes or 2 for no.")
+                except ValueError as e:
+                    print(e)
     except Exception as e:
         print(f"An error occurred: {e}. \n\nExiting the program.")
         return
