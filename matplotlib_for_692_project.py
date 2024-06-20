@@ -200,6 +200,11 @@ def plot_life_quality(grouped_data, country, data_frame):
     plot_3.set_xticks(np.arange(life_exp_df_for_pivot['year'].min(), life_exp_df_for_pivot['year'].max() + 1, 1))
     plot_3.legend(life_exp_pivot_table.columns)
 
+    filename_pivot = f"output/{country.lower()}_life_quality_pivot.csv"
+
+    life_exp_pivot_table.to_csv(filename_pivot)
+    print(f"\nPivot table saved as '{filename_pivot}'.")
+
 
    
     # -------------------------------------#
@@ -264,7 +269,12 @@ def plot_economy(grouped_data, country, data_frame):
     plot_3.set_xticks(np.arange(economy_df_for_pivot['year'].min(), economy_df_for_pivot['year'].max() + 1, 1))
     plot_3.legend(economy_pivot_table.columns)
 
+    filename_pivot = f"output/{country.lower()}_economy_pivot.csv"
 
+    economy_pivot_table.to_csv(filename_pivot)
+    print(f"\nPivot table saved as '{filename_pivot}'.")
+
+   
    
     # -------------------------------------#
 
@@ -329,7 +339,12 @@ def plot_energy(grouped_data, country, data_frame):
     plot_3.set_xticks(np.arange(energy_df_for_pivot['year'].min(), energy_df_for_pivot['year'].max() + 1, 1))
     plot_3.legend(energy_pivot_table.columns)
 
+    filename_pivot = f"output/{country.lower()}_energy_pivot.csv"
 
+    energy_pivot_table.to_csv(filename_pivot)
+    print(f"\nPivot table saved as '{filename_pivot}'.")
+
+   
    
     # -------------------------------------#
 
@@ -403,6 +418,11 @@ def plot_technology(grouped_data, country, data_frame):
     plot_3.set_xticks(np.arange(technology_df_for_pivot['year'].min(), technology_df_for_pivot['year'].max() + 1, 1))
     plot_3.legend(technology_pivot_table.columns)
 
+    filename_pivot = f"output/{country.lower()}_technology_pivot.csv"
+
+    technology_pivot_table.to_csv(filename_pivot)
+    print(f"\nPivot table saved as '{filename_pivot}'.")
+
   
    
     # -------------------------------------#
@@ -471,7 +491,12 @@ def plot_digital_infrastructure(grouped_data, country, data_frame):
     plot_3.set_xticks(np.arange(digital_infrastructure_df_for_pivot['year'].min(), digital_infrastructure_df_for_pivot['year'].max() + 1, 1))
     plot_3.legend(digital_infrastructure_pivot_table.columns)
 
+    filename_pivot = f"output/{country.lower()}_digital_infrastructure_pivot.csv"
 
+    digital_infrastructure_pivot_table.to_csv(filename_pivot)
+    print(f"\nPivot table saved as '{filename_pivot}'.")
+
+   
    
     # -------------------------------------#
 
